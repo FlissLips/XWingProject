@@ -1,8 +1,8 @@
 // X Wing Flight Controller 
-// Authors: 
+
 
 // Credits:
-// Flight controller skeleton code borrowed from:
+// Flight controller skeleton code from:
 // dRhemFlight Flight Controller - 
 //             Nicholas Rehm
 //             Department of Aerospace Engineering
@@ -95,8 +95,34 @@ void setup() {
 
 }
 
-
+// Main Loop
 void loop() {
   // put your main code here, to run repeatedly:
 
+  // TODO: Add print functions for each stage here:
+
+  // 1. Get current state and filter data
+  getIMUdata(); // Gets values of gyro and accel data from IMU, filtering not needed.
+  getAltitudeData(); // Gets the current altitude from altitude sensor (also barometer?)
+
+  // 2. Get user desired state and filter data
+  getDesState(); // Get raw flight commands and normalise them
+
+  // 3. Control System
+  controlSystem(); // stabilse angles using cascaded PID method
+
+  // 4. Control mixing and scaling
+  controlMixer(); // control mixing to make motor and servo commands
+  scaleCommands(); // scale motor and servo commands
+  
+  // 5. Output commands to drone and input commands from radio
+  commandOutput(); // Sends commands to motor and servo
+  getCommands(); // get next commands from user
+
+  // 6. Fail Safes  
+  failSafe(); //prevent failures in event of bad receiver connection,
+
+  // Regulate loop rate
+  loopRate(1); 
 }
+
