@@ -1,7 +1,3 @@
-
-
-
-
 // X Wing Flight Controller 
 // Authors: 
 
@@ -50,6 +46,7 @@ const int servo1pin,servo2pin,servo3pin,servo4pin;
 // Global Variables
 // General:
 float dt;
+unsigned long current_time, prev_time;
 // Communication:
 unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm; // Don't know how many channels needed
 unsigned long channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev;
@@ -72,22 +69,32 @@ float error_yaw, error_yaw_prev, integral_yaw, integral_yaw_prev, derivative_yaw
 float m1_command_scaled, m2_command_scaled, m3_command_scaled, m4_command_scaled;
 float s1_command_scaled, s2_command_scaled, s3_command_scaled, s4_command_scaled;
 // TODO: Add PWM values?
-
 // -----------------------------------------------------
 // User-defined Variables - to be defined during testing
 // Controller parameters:
 float i_limit; // Integration satuation level
 float max_roll, max_pitch, max_yaw; // Max values of roll, pitch, yaw. (Need different values per mode?)
 
-float Kp_roll, Ki_roll, Kd_roll; // PID gain values of roll
-float Kp_pitch, Ki_pitch, Kd_pitch; // PID gain values of pitch
-float Kp_yaw, Ki_yaw, Kd_yaw; // PID gain values of yaw
+// Rotor PID
+float Kp_roll_rotor, Ki_roll_rotor, Kd_roll_rotor; // PID gain values of roll
+float Kp_pitch_rotor, Ki_pitch_rotor, Kd_pitch_rotor; // PID gain values of pitch
+float Kp_yaw_rotor, Ki_yaw_rotor, Kd_yaw_rotor; // PID gain values of yaw
 
+// Fixed Wing PID
+float Kp_roll_fixed_wing, Ki_roll_fixed_wing, Kd_roll_fixed_wing; // PID gain values of roll
+float Kp_pitch_fixed_wing, Ki_pitch_fixed_wing, Kd_pitch_fixed_wing; // PID gain values of pitch
+float Kp_yaw_fixed_wing, Ki_yaw_fixed_wing, Kd_yaw_fixed_wing; // PID gain values of yaw
 
+// Enduarance PID
+float Kp_roll_endurance, Ki_roll_endurance, Kd_roll_endurance; // PID gain values of roll
+float Kp_pitch_endurance, Ki_pitch_endurance, Kd_pitch_endurance; // PID gain values of pitch
+float Kp_yaw_endurance, Ki_yaw_endurance, Kd_yaw_endurance; // PID gain values of yaw
+// -----------------------------------------------------
 void setup() {
   // put your setup code here, to run once:
 
 }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
