@@ -44,7 +44,9 @@ const int sharpIR;
 const int m1pin, m2pin, m3pin, m4pin;
 // Servo pins
 const int servo1pin,servo2pin,servo3pin,servo4pin;
+
 // -----------------------------------------------------
+
 // Global Variables
 // General:
 float dt;
@@ -69,6 +71,18 @@ float error_yaw, error_yaw_prev, integral_yaw, integral_yaw_prev, derivative_yaw
 // Control mixer
 float m1_command_scaled, m2_command_scaled, m3_command_scaled, m4_command_scaled;
 float s1_command_scaled, s2_command_scaled, s3_command_scaled, s4_command_scaled;
+// TODO: Add PWM values?
+
+// -----------------------------------------------------
+// User-defined Variables - to be defined during testing
+// Controller parameters:
+float i_limit; // Integration satuation level
+float max_roll, max_pitch, max_yaw; // Max values of roll, pitch, yaw. (Need different values per mode?)
+
+float Kp_roll, Ki_roll, Kd_roll; // PID gain values of roll
+float Kp_pitch, Ki_pitch, Kd_pitch; // PID gain values of pitch
+float Kp_yaw, Ki_yaw, Kd_yaw; // PID gain values of yaw
+
 
 void setup() {
   // put your setup code here, to run once:
