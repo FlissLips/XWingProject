@@ -1,3 +1,27 @@
+// Flight_Controller Functions
+
+
+// SETUP LOOP
+// -----------------------------------------------------
+void commsSetup() {
+
+}
+
+void IMUSetup() {
+
+}
+
+void altitudeSetup() {
+
+}
+
+void calibrateAttitude() {
+
+}
+
+// MAIN LOOP
+// -----------------------------------------------------
+// Reads IMU data from
 void getIMUdata() {
   
 }
@@ -31,7 +55,7 @@ void getCommands() {
 }
 
 void failSafe() {
-  
+
 }
 
 void loopRate(int frequency) {

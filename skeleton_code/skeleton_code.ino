@@ -91,7 +91,16 @@ float Kp_pitch_endurance, Ki_pitch_endurance, Kd_pitch_endurance; // PID gain va
 float Kp_yaw_endurance, Ki_yaw_endurance, Kd_yaw_endurance; // PID gain values of yaw
 // -----------------------------------------------------
 void setup() {
-  // put your setup code here, to run once:
+  // TODO: Initalise Pins
+  
+  commsSetup(); // Setup communication between drone and user
+
+  IMUSetup(); // Setup IMU 
+  altitudeSetup(); // Setup altitude sensor
+
+  calibrateAttitude(); // Warms up sensors before main loop
+
+  // TODO: Write warmup commands to motors and servos
 
 }
 
