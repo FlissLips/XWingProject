@@ -30,12 +30,20 @@
 // Required Libraries:
 #include <Adafruit_BNO055.h> // For the BNO055 IMU sensor
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
+// -----------------------------------------------------
 // Pin Selection:
 // NOTE: PINS PUT HERE AS PLACEHOLDERS, WILL BE CHANGED IN FINAL VERSION
 // Radio:
-const int ch1pin, ch2pin, ch3pin; 
+const int ch1pin, ch2pin, ch3pin; // Don't know how many pins we'll need here
 //BNO055
-
+const int MPU;
+// GP2Y0A710K
+const int sharpIR;
+// Motor pins:
+const int m1pin, m2pin, m3pin, m4pin;
+// Servo pins
+const int servo1pin;
+// -----------------------------------------------------
 
 
 void setup() {
