@@ -74,7 +74,7 @@ float s1_command_scaled, s2_command_scaled, s3_command_scaled, s4_command_scaled
 // Controller parameters:
 float i_limit; // Integration satuation level
 float max_roll, max_pitch, max_yaw; // Max values of roll, pitch, yaw. (Need different values per mode?)
-
+int mode; // Current flight mode
 // Rotor PID
 float Kp_roll_rotor, Ki_roll_rotor, Kd_roll_rotor; // PID gain values of roll
 float Kp_pitch_rotor, Ki_pitch_rotor, Kd_pitch_rotor; // PID gain values of pitch
@@ -118,10 +118,10 @@ void loop() {
   getDesState(); // Get raw flight commands and normalise them
 
   // 3. Control System
-  controlSystem(); // stabilse angles using cascaded PID method
+  controlSystem(1); // stabilse angles using cascaded PID method
 
   // 4. Control mixing and scaling
-  controlMixer(); // control mixing to make motor and servo commands
+  controlMixer(1); // control mixing to make motor and servo commands
   scaleCommands(); // scale motor and servo commands
   
   // 5. Output commands to drone and input commands from radio
