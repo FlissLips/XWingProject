@@ -1,33 +1,37 @@
-#include <SharpIR.h>
+// Distance Sensor code without using the library.
+#define pinNo A0
 
-
-// Code to test Sharp GP2Y0A710K sensor
-// Using SharpIR library
-
-// Define model and input pin:
-#define IRPin 3
-#define model 100500
-
-
-
-
-
-// Create a new instance of the SharpIR class:
-SharpIR mySensor = SharpIR(IRPin, model);
+#define C1 1125.0
+#define C2 137500.0
 
 void setup() {
+  // put your setup code here, to run once:
+  pinMode(pinNo,INPUT);
   Serial.begin(9600);
-  pinMode(3,INPUT);
 }
 
+#define BUF_SIZE 30
+uint16_t buffer[BUF_SIZE] = {0};
+int counter = 0;
 void loop() {
-   delay(2000);   
+  // put your main code here, to run repeatedly:
+  uint16_t reading = analogRead(pinNo);
+  for(int i = 1; i < BUF_SIZE; i++)
+    buffer[i] = buffer[i-1];
+  buffer[0] = reading;
 
-  // Get a distance measurement and store it as distance_cm:
-  int distance_cm = mySensor.getDistance();
+  int avg = 0;
+  for(int i = 0; i < BUF_SIZE; i++)
+    avg += buffer[i];
+  avg /= BUF_SIZE;
 
-  // Print the measured distance to the serial monitor:
-  Serial.print("Mean distance: ");
-  Serial.print(distance_cm);
-  Serial.print("\n");
+  double readingMillivolts = 1000.0 * avg*(5.0/1024.0);
+  double distanceCentimetres = 1.0 / ( (readingMillivolts - C1) / C2 );
+  delay(1);
+  if(counter++ >= 1000)
+  {
+    counter = 0;
+    Serial.println(distanceCentimetres);
+
+  }
 }
