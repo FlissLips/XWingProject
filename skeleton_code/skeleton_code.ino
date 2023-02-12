@@ -27,15 +27,16 @@
 // Required Libraries:
 #include <Adafruit_BNO055.h> // For the BNO055 IMU sensor
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
+
 // -----------------------------------------------------
 // Pin Selection
 // NOTE: PINS PUT HERE AS PLACEHOLDERS, WILL BE CHANGED IN FINAL VERSION
 // Radio:
 const int ch1pin, ch2pin, ch3pin; // Don't know how many pins we'll need here
 //BNO055
-const int MPU;
+const int MPUpin;
 // GP2Y0A710K
-const int sharpIR;
+const int sharpIRpin;
 // Motor pins:
 const int m1pin, m2pin, m3pin, m4pin;
 // Servo pins
@@ -58,6 +59,9 @@ float GyroX_prev, GyroY_prev, GyroZ_prev;
 float roll_IMU, pitch_IMU, yaw_IMU;
 float roll_IMU_prev, pitch_IMU_prev;
 float AccErrorX, AccErrorY, AccErrorZ, GyroErrorX, GyroErrorY, GyroErrorZ;
+// Altitude Sensors
+float AltSharp, airPressure, AltBar, AltFused;
+float model;
 // TODO: Need to add variables for sensor fusion? Altitude sensor fusion?
 // Desired states from reciever
 float roll_des, pitch_des, yaw_des, alt_des;
@@ -115,6 +119,7 @@ void loop() {
   getAltitudeData(); // Gets the current altitude from altitude sensor (also barometer?)
 
   // 2. Get user desired state and filter data
+  // Commands needed: yaw, pitch, roll, throttle, mode
   getDesState(); // Get raw flight commands and normalise them
 
   // 3. Control System

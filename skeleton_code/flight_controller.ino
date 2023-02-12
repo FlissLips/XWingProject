@@ -30,7 +30,11 @@ void getIMUdata() {
 // Reads Altitude data from SharpIR GP2Y0A710K distance sensor
 // TO BE DONE
 void getAltitudeData() {
-
+  // Create instance of sharp distance sensor
+  SharpIR SharpIR(sharpIRpin,model);
+  // Send distance to variable
+  AltSharp = SharpIR.getDistance();
+  
 }
 // Normalizes desired control values to appropriate values.
 // Also creates roll_passthru, pitch_passthru, and yaw_passthru variables
@@ -43,17 +47,90 @@ void getDesState() {
 // Different control system will be used depending on the current state
 // TO BE COPIED
 void controlSystem(int mode) {
-  
+  // Values of 
+  if (mode == 0) //Hover Mode
+  {
+    Kp_pitch_angle = 0;
+    Ki_pitch_angle = 0;
+    Kd_pitch_angle = 0;
+
+    Kp_roll_angle = 0;
+    Ki_roll_angle = 0;
+    Kd_roll_angle = 0;
+      
+    Kp_roll_rate = 0;
+    Ki_roll_rate = 0;
+    Kd_roll_rate = 0;
+
+    Kp_pitch_rate = 0;
+    Ki_pitch_rate = 0;
+    Kd_pitch_rate = 0;
+
+    Kp_yaw = 0;
+    Ki_yaw= 0;
+    Kd_yaw = 0;  
+
+  }
+  if (mode == 1)// Cruise Mode
+  {
+    Kp_pitch_angle = 0;
+    Ki_pitch_angle = 0;
+    Kd_pitch_angle = 0;
+
+    Kp_roll_angle = 0;
+    Ki_roll_angle = 0;
+    Kd_roll_angle = 0;
+    
+    Kp_roll_rate = 0;
+    Ki_roll_rate = 0;
+    Kd_roll_rate = 0;
+
+    Kp_pitch_rate = 0;
+    Ki_pitch_rate = 0;
+    Kd_pitch_rate = 0;
+
+    Kp_yaw = 0;
+    Ki_yaw= 0;
+    Kd_yaw = 0;  
+
+  }
+
+  }
+  if (mode == 2) // Spinning Mode
+  {
+    Kp_pitch_angle = 0;
+    Ki_pitch_angle = 0;
+    Kd_pitch_angle = 0;
+
+    Kp_roll_angle = 0;
+    Ki_roll_angle = 0;
+    Kd_roll_angle = 0;
+    
+    Kp_roll_rate = 0;
+    Ki_roll_rate = 0;
+    Kd_roll_rate = 0;
+
+    Kp_pitch_rate = 0;
+    Ki_pitch_rate = 0;
+    Kd_pitch_rate = 0;
+
+    Kp_yaw = 0;
+    Ki_yaw= 0;
+    Kd_yaw = 0;  
+
+  }
+  }
 }
 // Mixing commands to motor and servo
 // Different control mixing will depend on the current state
 // TO BE DONE
 void controlMixer(int mode) {
-
+ 
 }
 //Computes control commands based on state error (angle) in cascaded scheme
 // TO BE DONE
 void scaleCommands() {
+
   
 }
 
