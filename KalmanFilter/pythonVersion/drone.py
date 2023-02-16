@@ -19,7 +19,7 @@ class Drone:
         self._barometer = Sensor(noise_mean,noise_variance)
 
         noise_mean = 0.02
-        noise_variance = 0.05
+        noise_variance = 0.01
         self._distance_sensor = Sensor(noise_mean,noise_variance)
     
     def update(self, time):
