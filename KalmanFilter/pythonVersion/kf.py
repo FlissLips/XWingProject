@@ -4,15 +4,15 @@ class KF:
     def __init__(self):
         self.state  = np.reshape([1,1,1], (3,1))
         self.covariance = np.eye(3);
-        self.process_noise
+        self.process_noise = np.diag([10E-3, 10E-3, 1E-9]);
     
     def state_transition(self,dt):
         a = dt
-        b = 0.5*((dt*dt)**2)
+        b = 0.5*((dt*dt))
         state_transition = np.matrix(
             [
                 [1,0,0],
-                [a,1,0]
+                [a,1,0],
                 [b,a,1]
             ]
         )
