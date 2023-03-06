@@ -69,7 +69,7 @@ unsigned long current_time, prev_time;
 unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm; // Don't know how many channels needed
 unsigned long channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev;
 
-bfs::SbusRx sbus_rx(&Serial2);
+bfs::SbusRx sbus(&Serial2);
 uint16_t sbusChannels[16];
 bool sbusFailSafe;
 bool sbusLostFrame;
