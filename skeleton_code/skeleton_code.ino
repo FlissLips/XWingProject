@@ -30,17 +30,27 @@
 
 // -----------------------------------------------------
 // Pin Selection
-// NOTE: PINS PUT HERE AS PLACEHOLDERS, WILL BE CHANGED IN FINAL VERSION
+
 // Radio:
-const int ch1pin, ch2pin, ch3pin; // Don't know how many pins we'll need here
-//BNO055
-const int MPUpin;
+const int SBUSPin = 9;
+//BNO055 IMU
+const int IMUSCLPin = 19;
+const int IMUSDAPin = 18;
 // GP2Y0A710K
-const int sharpIRpin;
-// Motor pins:
-const int m1pin, m2pin, m3pin, m4pin;
+const int distanceSensorPin = 17;
+// Barometer
+const int barometerSCL = 19;
+const int barometerSDA = 18;
+// Motor pins
+const int m1pin = 3;
+const int m2pin = 4;
+const int m3pin = 5;
+const int m4pin = 6;
 // Servo pins
-const int servo1pin,servo2pin,servo3pin,servo4pin;
+const int servo1pin = 20;
+const int servo2pin = 21;
+const int servo3pin = 22;
+const int servo4pin = 23;
 
 // -----------------------------------------------------
 
