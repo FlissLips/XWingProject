@@ -31,6 +31,7 @@
 #include <Wire.h> // I2C Communication
 #include <sbus.h> // SBus Communication
 #include <PWMServo.h> // PWM Servo 
+#include <HP20x_dev.h> // For the Grove barometer HP20
 // -----------------------------------------------------
 // Pin Selection
 

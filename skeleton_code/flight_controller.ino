@@ -59,8 +59,10 @@ void distanceSensorSetup()
   if (counter++ >= 1000)
   {
     counter = 0;
-    Serial.print("Measuring current distance as: ");
-    Serial.println(distanceCentimetres);
+    Serial.print("Measuring current (unfiltered) distance as: ");
+    Serial.print(distanceCentimetres);
+    Serial.println("m. \n");
+    Serial.println("Please make sure this is correct.");
   }
 }
 
@@ -68,6 +70,14 @@ void distanceSensorSetup()
 void barometerSetup()
 {
   Serial.println("Currently Testing Grove Hi-Accuracy Barometer...");
+  HP20x.begin();
+  delay(5);
+  long Altitude = HP20x.ReadAltitude();
+  Serial.println("(Unfiltered) Altitude:");
+  t = Altitude / 100.0;
+  Serial.print(t);
+  Serial.println("m.\n");
+  Serial.println("Please make sure this is correct.");
 }
 
 void calibrateAttitude()
