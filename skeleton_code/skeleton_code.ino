@@ -39,6 +39,8 @@ const int SBUSPin = 9;
 //BNO055 IMU
 const int IMUSCLPin = 19;
 const int IMUSDAPin = 18;
+// IMU Object (Default device address used (alt device address = 0x29))
+Adafruit_BNO055 bno(55, 0x28, &Wire);
 // GP2Y0A710K
 const int distanceSensorPin = 17;
 // Barometer

@@ -1,19 +1,30 @@
 // Flight_Controller Functions
 
+#define ACCEL_SCALE_FACTOR 9.8
+#define GYRO_SCALE_FACTOR 1
+
 
 // SETUP LOOP
 // -----------------------------------------------------
 
-// This function sets up the radio reciever
+// This function initalises the radio reciever
 // Currently setup for SBUS communication, but can be altered
 // If other radio comms are used (PPM, PWM, DSM etc.)
 void commsSetup() {
   sbus.Begin();
 
 }
-
+// This function initalised the BNO005 IMU Sensor
 void IMUSetup() {
+  //initializing the sensor
+  if(!bno.begin())
+  {
+    //if it cannot detect the BNO055
+    Serial.println("BNO055 initialization unsuccessful");
+    Serial.println("Check Wiring... or maybe the I2C address..?");
+    while(1){}
 
+  }
 }
 
 void altitudeSetup() {
