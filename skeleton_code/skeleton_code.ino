@@ -1,3 +1,4 @@
+
 // X Wing Flight Controller 
 
 
@@ -27,7 +28,8 @@
 // Required Libraries:
 #include <Adafruit_BNO055.h> // For the BNO055 IMU sensor
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
-
+#include <Wire.h> // I2C Communication
+#include <sbus.h>
 // -----------------------------------------------------
 // Pin Selection
 
@@ -61,6 +63,11 @@ unsigned long current_time, prev_time;
 // Communication:
 unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm; // Don't know how many channels needed
 unsigned long channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev;
+
+bfs::SbusRx sbus_rx(&Serial2);
+uint16_t sbusChannels[16];
+bool sbusFailSafe;
+bool sbusLostFrame;
 // IMU
 float AccX, AccY, AccZ;
 float AccX_prev, AccY_prev, AccZ_prev;
