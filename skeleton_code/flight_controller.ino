@@ -8,7 +8,7 @@
 // Currently setup for SBUS communication, but can be altered
 // If other radio comms are used (PPM, PWM, DSM etc.)
 void commsSetup() {
-  sbus.begin();
+  sbus.Begin();
 
 }
 

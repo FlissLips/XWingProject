@@ -161,7 +161,7 @@ void loop() {
   getDesState(); // Get raw flight commands and normalise them
 
   // 3. Control System
-  controlSystem(1); // stabilse angles using cascaded PID method
+  // controlSystem(1); // stabilse angles using cascaded PID method
 
   // 4. Control mixing and scaling
   controlMixer(1); // control mixing to make motor and servo commands
