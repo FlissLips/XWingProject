@@ -119,10 +119,11 @@ float Kp_pitch_endurance, Ki_pitch_endurance, Kd_pitch_endurance; // PID gain va
 float Kp_yaw_endurance, Ki_yaw_endurance, Kd_yaw_endurance; // PID gain values of yaw
 // -----------------------------------------------------
 void setup() {
+  // 1. Establish Serial Connection (DONE)
   Serial.begin(9600); // USB Serial for debug
   delay(500);
 
-  // Intialise pins
+  // 2. Intialise all pins
   pinMode(m1pin,OUTPUT);
   pinMode(m2pin,OUTPUT);
   pinMode(m3pin,OUTPUT);
@@ -131,18 +132,30 @@ void setup() {
   servo2.attach(servo2pin,900,2100);
   servo3.attach(servo3pin,900,2100);
   servo4.attach(servo4pin,900,2100);
-
-  // Delay before comms 
+  pinMode(distanceSensorPin,INPUT);
 
   delay(5);
 
+  //3. Setup communication between drone and radio/user (DONE)
+  commsSetup(); 
 
-  commsSetup(); // Setup communication between drone and user
+  delay(5);
+  // 4. Establish communication between drone and sensors (IMU, Distance Sensor, Barometer)
+  IMUSetup(); // Setup IMU(DONE)
+  delay(5);
+  distanceSensorSetup();
+  delay(5);
+  // barometerSetup();
 
-  IMUSetup(); // Setup IMU 
-  altitudeSetup(); // Setup altitude sensor
 
-  calibrateAttitude(); // Warms up sensors before main loop
+  // 5. Get Sensor Errors (IMU, Distance Sensor, Barometer) to apply to readings in the main loop
+
+  // 6. Write low values of servos using PWM
+
+  // 7. Write low values to ESCs using OneShot125
+
+  // 8. Warm up sensor fusion before main loop
+  // calibrateAltitude(); 
 
   // TODO: Write warmup commands to motors and servos
 
@@ -156,6 +169,8 @@ void loop() {
 
   // 1. Get current state and filter data
   getIMUdata(); // Gets values of gyro and accel data from IMU, filtering not needed.
+  
+  
   getAltitudeData(); // Gets the current altitude from altitude sensor (also barometer?)
 
   // 2. Get user desired state and filter data
