@@ -29,7 +29,8 @@
 #include <Adafruit_BNO055.h> // For the BNO055 IMU sensor
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
 #include <Wire.h> // I2C Communication
-#include <sbus.h>
+#include <sbus.h> // SBus Communication
+#include <PWMServo.h> // PWM Servo 
 // -----------------------------------------------------
 // Pin Selection
 
@@ -48,12 +49,16 @@ const int m1pin = 3;
 const int m2pin = 4;
 const int m3pin = 5;
 const int m4pin = 6;
-// Servo pins
+// Servo pins (all PWM pins are usable for PWMServos)
 const int servo1pin = 20;
 const int servo2pin = 21;
 const int servo3pin = 22;
 const int servo4pin = 23;
-
+// Servo objects to control a servo
+PWMServo servo1;
+PWMServo servo2;
+PWMServo servo3;
+PWMServo servo4;
 // -----------------------------------------------------
 
 // Global Variables
@@ -112,8 +117,24 @@ float Kp_pitch_endurance, Ki_pitch_endurance, Kd_pitch_endurance; // PID gain va
 float Kp_yaw_endurance, Ki_yaw_endurance, Kd_yaw_endurance; // PID gain values of yaw
 // -----------------------------------------------------
 void setup() {
-  // TODO: Initalise Pins
-  
+  Serial.begin(9600); // USB Serial for debug
+  delay(500);
+
+  // Intialise pins
+  pinMode(m1pin,OUTPUT);
+  pinMode(m2pin,OUTPUT);
+  pinMode(m3pin,OUTPUT);
+  pinMode(m4pin,OUTPUT);
+  servo1.attach(servo1pin,900,2100); // Pin number, min PWM, max PWM (currently arbitrary)
+  servo2.attach(servo2pin,900,2100);
+  servo3.attach(servo3pin,900,2100);
+  servo4.attach(servo4pin,900,2100);
+
+  // Delay before comms 
+
+  delay(5);
+
+
   commsSetup(); // Setup communication between drone and user
 
   IMUSetup(); // Setup IMU 
