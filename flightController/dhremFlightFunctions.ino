@@ -982,7 +982,7 @@ void switchRollYaw(int reverseRoll, int reverseYaw) {
   roll_des = reverseRoll*switch_holder;
 }
 
-// NEEDS CHANGING
+// CHANGED
 void throttleCut() {
   //DESCRIPTION: Directly set actuator outputs to minimum value if triggered
   /*
@@ -996,17 +996,14 @@ void throttleCut() {
     m2_command_PWM = 120;
     m3_command_PWM = 120;
     m4_command_PWM = 120;
-    m5_command_PWM = 120;
-    m6_command_PWM = 120;
+   
     
     //Uncomment if using servo PWM variables to control motor ESCs
-    //s1_command_PWM = 0;
-    //s2_command_PWM = 0;
-    //s3_command_PWM = 0;
-    //s4_command_PWM = 0;
-    //s5_command_PWM = 0;
-    //s6_command_PWM = 0;
-    //s7_command_PWM = 0;
+    s1_command_PWM = 0;
+    s2_command_PWM = 0;
+    s3_command_PWM = 0;
+    s4_command_PWM = 0;
+    
   }
 }
 
