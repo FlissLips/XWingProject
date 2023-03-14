@@ -23,9 +23,6 @@ RcGroups 'jihlein' - IMU implementation overhaul + SBUS implementation.
 Everyone that sends me pictures and videos of your flying creations! -Nick
 
 */
-
-
-
 //========================================================================================================================//
 //                                                 USER-SPECIFIED DEFINES                                                 //                                                                 
 //========================================================================================================================//
@@ -37,13 +34,7 @@ Everyone that sends me pictures and videos of your flying creations! -Nick
 //#define USE_DSM_RX
 static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to match the number of transmitter channels you have
 
-
-
-
-
 //========================================================================================================================//
-
-
 
 //REQUIRED LIBRARIES (included with download in main sketch folder)
 
@@ -54,16 +45,7 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
 #include <sbus.h> // SBus Communication
 #include  <barometer_dubbed.h>// For the Grove barometer HP20
-
-
-
-
-
-
-//========================================================================================================================//
-
-
-
+//========================================================================================================================
 //Setup gyro and accel full scale value selection and scale factor
 
 #define ACCEL_SCALE_FACTOR 9.8
@@ -97,8 +79,6 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 //   #define ACCEL_SCALE ACCEL_FS_SEL_16
 //   #define ACCEL_SCALE_FACTOR 2048.0
 // #endif
-
-
 
 //========================================================================================================================//
 //                                               USER-SPECIFIED VARIABLES                                                 //                           
@@ -160,22 +140,18 @@ float Kp_yaw = 0.3;           //Yaw P-gain
 float Ki_yaw = 0.05;          //Yaw I-gain
 float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
-
-
-
-
 //========================================================================================================================//
 //                                                     DECLARE PINS                                                       //                           
 //========================================================================================================================//                                          
 
 //NOTE: Pin 13 is reserved for onboard LED, pins 18 and 19 are reserved for the MPU6050 IMU for default setup
 //Radio:
-const int ch1Pin = 15; //throttle
-const int ch2Pin = 16; //ail
-const int ch3Pin = 17; //ele
-const int ch4Pin = 20; //rudd
-const int ch5Pin = 21; //gear (throttle cut)
-const int ch6Pin = 22; //aux1 (free aux channel)
+// const int ch1Pin = 15; //throttle
+// const int ch2Pin = 16; //ail
+// const int ch3Pin = 17; //ele
+// const int ch4Pin = 20; //rudd
+// const int ch5Pin = 21; //gear (throttle cut)
+// const int ch6Pin = 22; //aux1 (free aux channel)
 const int PPM_Pin = 23;
 // IMU Objects
 Adafruit_BNO055 bno(55, 0x28, &Wire);
