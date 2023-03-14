@@ -1,4 +1,4 @@
-// NEED CHANGING
+// Changed 
 void controlMixer()
 {
     // DESCRIPTION: Mixes scaled commands from PID controller to actuator outputs based on vehicle configuration
@@ -443,14 +443,25 @@ void getDesState() {
    * (rate mode). yaw_des is scaled to be within max yaw in degrees/sec. Also creates roll_passthru, pitch_passthru, and
    * yaw_passthru variables, to be used in commanding motors/servos with direct unstabilized commands in controlMixer().
    */
-  thro_des = (channel_1_pwm - 1000.0)/1000.0; //Between 0 and 1
-  roll_des = (channel_2_pwm - 1500.0)/500.0; //Between -1 and 1
-  pitch_des = (channel_3_pwm - 1500.0)/500.0; //Between -1 and 1
-  yaw_des = (channel_4_pwm - 1500.0)/500.0; //Between -1 and 1
+
+  // Needs to changed the range, as the range of our values are betweeen 171 and 1811
+  // thro_des = (channel_1_pwm - 1000.0)/1000.0; //Between 0 and 1
+  // roll_des = (channel_2_pwm - 1500.0)/500.0; //Between -1 and 1
+  // pitch_des = (channel_3_pwm - 1500.0)/500.0; //Between -1 and 1
+  // yaw_des = (channel_4_pwm - 1500.0)/500.0; //Between -1 and 1
+  // roll_passthru = roll_des/2.0; //Between -0.5 and 0.5
+  // pitch_passthru = pitch_des/2.0; //Between -0.5 and 0.5
+  // yaw_passthru = yaw_des/2.0; //Between -0.5 and 0.5
+
+  thro_des = (channel_1_pwm - 171)/(1811-171); //Between 0 and 1
+  roll_des = ((channel_2_pwm - 171) *2)/(1811-171) + -1; //Between -1 and 1
+  pitch_des = ((channel_3_pwm - 171) *2)/(1811-171) + -1; //Between -1 and 1
+  yaw_des = ((channel_4_pwm - 171) *2)/(1811-171) + -1; //Between -1 and 1
   roll_passthru = roll_des/2.0; //Between -0.5 and 0.5
   pitch_passthru = pitch_des/2.0; //Between -0.5 and 0.5
   yaw_passthru = yaw_des/2.0; //Between -0.5 and 0.5
-  
+
+
   //Constrain within normalized bounds
   thro_des = constrain(thro_des, 0.0, 1.0); //Between 0 and 1
   roll_des = constrain(roll_des, -1.0, 1.0)*maxRoll; //Between -maxRoll and +maxRoll
@@ -791,7 +802,7 @@ void failSafe() {
   }
 }
 
-// NEEDS CHANGING
+// Changed
 void commandMotors() {
   //DESCRIPTION: Send pulses to motor pins, oneshot125 protocol
   /*
