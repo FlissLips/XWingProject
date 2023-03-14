@@ -426,7 +426,7 @@ void Madgwick6DOF(float gx, float gy, float gz, float ax, float ay, float az, fl
   yaw_IMU = -atan2(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3)*57.29577951; //degrees
 }
 
-//UNCHANGED
+//NEEDS CHANGING
 void getDesState() {
   //DESCRIPTION: Normalizes desired control values to appropriate values
   /*
@@ -643,7 +643,7 @@ void controlRATE() {
   integral_yaw_prev = integral_yaw;
 }
 
-// NEEDS CHANGING
+// CHANGED
 void scaleCommands() {
   //DESCRIPTION: Scale normalized actuator commands to values for ESC/Servo protocol
   /*
@@ -657,36 +657,25 @@ void scaleCommands() {
   m2_command_PWM = m2_command_scaled*125 + 125;
   m3_command_PWM = m3_command_scaled*125 + 125;
   m4_command_PWM = m4_command_scaled*125 + 125;
-  m5_command_PWM = m5_command_scaled*125 + 125;
-  m6_command_PWM = m6_command_scaled*125 + 125;
   //Constrain commands to motors within oneshot125 bounds
   m1_command_PWM = constrain(m1_command_PWM, 125, 250);
   m2_command_PWM = constrain(m2_command_PWM, 125, 250);
   m3_command_PWM = constrain(m3_command_PWM, 125, 250);
   m4_command_PWM = constrain(m4_command_PWM, 125, 250);
-  m5_command_PWM = constrain(m5_command_PWM, 125, 250);
-  m6_command_PWM = constrain(m6_command_PWM, 125, 250);
 
   //Scaled to 0-180 for servo library
   s1_command_PWM = s1_command_scaled*180;
   s2_command_PWM = s2_command_scaled*180;
   s3_command_PWM = s3_command_scaled*180;
   s4_command_PWM = s4_command_scaled*180;
-  s5_command_PWM = s5_command_scaled*180;
-  s6_command_PWM = s6_command_scaled*180;
-  s7_command_PWM = s7_command_scaled*180;
   //Constrain commands to servos within servo library bounds
   s1_command_PWM = constrain(s1_command_PWM, 0, 180);
   s2_command_PWM = constrain(s2_command_PWM, 0, 180);
   s3_command_PWM = constrain(s3_command_PWM, 0, 180);
   s4_command_PWM = constrain(s4_command_PWM, 0, 180);
-  s5_command_PWM = constrain(s5_command_PWM, 0, 180);
-  s6_command_PWM = constrain(s6_command_PWM, 0, 180);
-  s7_command_PWM = constrain(s7_command_PWM, 0, 180);
-
 }
 
-// NEED CHANGING ..?
+// CHANGED
 void getCommands() {
   //DESCRIPTION: Get raw PWM values for every channel from the radio
   /*

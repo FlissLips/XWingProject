@@ -146,13 +146,6 @@ float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high,
 
 //NOTE: Pin 13 is reserved for onboard LED, pins 18 and 19 are reserved for the MPU6050 IMU for default setup
 //Radio:
-// const int ch1Pin = 15; //throttle
-// const int ch2Pin = 16; //ail
-// const int ch3Pin = 17; //ele
-// const int ch4Pin = 20; //rudd
-// const int ch5Pin = 21; //gear (throttle cut)
-// const int ch6Pin = 22; //aux1 (free aux channel)
-const int PPM_Pin = 23;
 // IMU Objects
 Adafruit_BNO055 bno(55, 0x28, &Wire);
 //OneShot125 ESC pin outputs:
