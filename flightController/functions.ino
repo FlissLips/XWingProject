@@ -18,21 +18,27 @@ void controlMixer()
      */
 
     // Quad mixing - EXAMPLE
-    m1_command_scaled = thro_des - pitch_PID + roll_PID + yaw_PID; // Front Left
-    m2_command_scaled = thro_des - pitch_PID - roll_PID - yaw_PID; // Front Right
-    m3_command_scaled = thro_des + pitch_PID - roll_PID + yaw_PID; // Back Right
-    m4_command_scaled = thro_des + pitch_PID + roll_PID - yaw_PID; // Back Left
-    m5_command_scaled = 0;
-    m6_command_scaled = 0;
+    // m1_command_scaled = thro_des - pitch_PID + roll_PID + yaw_PID; // Front Left
+    // m2_command_scaled = thro_des - pitch_PID - roll_PID - yaw_PID; // Front Right
+    // m3_command_scaled = thro_des + pitch_PID - roll_PID + yaw_PID; // Back Right
+    // m4_command_scaled = thro_des + pitch_PID + roll_PID - yaw_PID; // Back Left
+    // m5_command_scaled = 0;
+    // m6_command_scaled = 0;
+
+    m1_command_scaled = thro_des/4 - pitch_PID/2; // Forward motor
+    m2_command_scaled = thro_des/4 + roll_PID/2;// Right motor
+    m3_command_scaled = thro_des/4 + pitch_PID/2; // Back motor
+    m4_command_scaled = thro_des/4 - roll_PID/2; // Left motor
+
+    
 
     // 0.5 is centered servo, 0.0 is zero throttle if connecting to ESC for conventional PWM, 1.0 is max throttle
-    s1_command_scaled = 0;
-    s2_command_scaled = 0;
-    s3_command_scaled = 0;
-    s4_command_scaled = 0;
-    s5_command_scaled = 0;
-    s6_command_scaled = 0;
-    s7_command_scaled = 0;
+    float servo_calculation = yaw_PID/(length*thro_des);
+    s1_command_scaled = asin(servo_calculation);
+    s2_command_scaled = asin(servo_calculation);
+    s3_command_scaled = asin(servo_calculation);
+    s4_command_scaled = asin(servo_calculation);  
+   
 }
 
 // CHANGED FOR OUR IMU
@@ -53,6 +59,7 @@ void IMUinit()
         }
     }
 }
+
 // CHANGED FOR OUR IMU
 void getIMUdata()
 {

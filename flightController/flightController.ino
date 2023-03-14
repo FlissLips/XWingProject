@@ -140,6 +140,8 @@ float Kp_yaw = 0.3;           //Yaw P-gain
 float Ki_yaw = 0.05;          //Yaw I-gain
 float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
+
+float length = 0.5;           // length from servoes to the centre of motors (mS)
 //========================================================================================================================//
 //                                                     DECLARE PINS                                                       //                           
 //========================================================================================================================//                                          
@@ -149,10 +151,10 @@ float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high,
 // IMU Objects
 Adafruit_BNO055 bno(55, 0x28, &Wire);
 //OneShot125 ESC pin outputs:
-const int m1Pin = 0;
-const int m2Pin = 1;
-const int m3Pin = 2;
-const int m4Pin = 3;
+const int m1Pin = 0; // Motor forward
+const int m2Pin = 1; // Motor right
+const int m3Pin = 2; // Motor backward
+const int m4Pin = 3; // Motor left
 //PWM servo or ESC outputs:
 const int servo1Pin = 6;
 const int servo2Pin = 7;
@@ -246,7 +248,7 @@ void setup() {
   delay(5);
 
   //Initialize radio communication
-  radioSetup();
+  // radioSetup();
   
   //Set radio channels to default (safe) values before entering main loop
   channel_1_pwm = channel_1_fs;
@@ -360,29 +362,4 @@ void loop() {
 //========================================================================================================================//
 //                                                      FUNCTIONS                                                         //                           
 //========================================================================================================================//
-
-
-
-
-
-
-
-
-void printRadioData() {
-  if (current_time - print_counter > 10000) {
-    print_counter = micros();
-    Serial.print(F(" CH1: "));
-    Serial.print(channel_1_pwm);
-    Serial.print(F(" CH2: "));
-    Serial.print(channel_2_pwm);
-    Serial.print(F(" CH3: "));
-    Serial.print(channel_3_pwm);
-    Serial.print(F(" CH4: "));
-    Serial.print(channel_4_pwm);
-    Serial.print(F(" CH5: "));
-    Serial.print(channel_5_pwm);
-    Serial.print(F(" CH6: "));
-    Serial.println(channel_6_pwm);
-  }
-}
 
