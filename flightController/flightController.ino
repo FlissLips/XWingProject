@@ -148,24 +148,32 @@ float length = 0.5;           // length from servoes to the centre of motors (mS
 //========================================================================================================================//                                          
 
 //NOTE: Pin 13 is reserved for onboard LED, pins 18 and 19 are reserved for the MPU6050 IMU for default setup
-//Radio:
+
+// Radio:
+const int SBUSPin = 9;
 // IMU Objects
+const int IMUSCLPin = 19;
+const int IMUSDAPin = 18;
 Adafruit_BNO055 bno(55, 0x28, &Wire);
+// GP2Y0A710K
+const int distanceSensorPin = 17;
+// Barometer
+const int barometerSCL = 19;
+const int barometerSDA = 18;
 //OneShot125 ESC pin outputs:
-const int m1Pin = 0; // Motor forward
-const int m2Pin = 1; // Motor right
-const int m3Pin = 2; // Motor backward
-const int m4Pin = 3; // Motor left
+const int m1Pin = 3; // Motor forward
+const int m2Pin = 4; // Motor right
+const int m3Pin = 5; // Motor backward
+const int m4Pin = 6; // Motor left
 //PWM servo or ESC outputs:
-const int servo1Pin = 6;
-const int servo2Pin = 7;
-const int servo3Pin = 8;
-const int servo4Pin = 9;
+const int servo1Pin = 20;
+const int servo2Pin = 21;
+const int servo3Pin = 22;
+const int servo4Pin = 23;
 PWMServo servo1;  //Create servo objects to control a servo or ESC with PWM
 PWMServo servo2;
 PWMServo servo3;
 PWMServo servo4;
-PWMServo servo5;
 
 
 
