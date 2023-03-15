@@ -472,6 +472,41 @@ void getDesState() {
   yaw_passthru = constrain(yaw_passthru, -0.5, 0.5);
 }
 
+void getMode() {
+  // DESCRIPTION: Gets the data from channels 6 and 7 to determine which mode the X-Wing is in.
+  /* This is an extra function added by us, and therefore is not as tested as the other functions.
+  * There are 3 modes (Horizontal, Vertical, and Spinning), and the mode can be determined from the notes.
+  * It also assumes the controller we using is still in use, with the maximum values 1811 and minimum 171.
+  */
+  int min_value = 171;
+  int max_value = 1811;
+
+  int mode_one_value, mode_two_value;
+  mode_one_value = (channel_6_pwm - min_value)/(max_value-min_value); // Between 0 and 1
+  mode_two_value = (channel_7_pwm - min_value)/(max_value-min_value); // Between 0 and 1
+
+  if (mode_one_value == 0 && mode_two_value == 0)
+  {
+    mode = 0; // Horizontal
+  }
+  else if (mode_one_value == 1 && mode_two_value == 0)
+  {
+    mode = 1; // Vertical
+  }
+  else if (mode_one_value == 1 && mode_two_value == 1)
+  {
+    mode = 2; // Spinning
+  }
+  else
+  {
+    mode = 0; // Default = Horizontal ??
+  }
+  
+
+
+  
+}
+
 // UNCHANGED (Might not use...)
 void controlANGLE() {
   //DESCRIPTION: Computes control commands based on state error (angle)
