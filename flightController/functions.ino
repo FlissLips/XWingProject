@@ -805,7 +805,7 @@ void getCommands() {
     
   #elif defined USE_SBUS_RX
     bfs::SbusData data;
-    int number_of_channels = 6;
+    int number_of_channels = 7;
     if (sbus.Read())
     {
       data = sbus.data(); 
@@ -817,14 +817,17 @@ void getCommands() {
       sbusLostFrame = data.failsafe;
       
       //sBus scaling below is for Taranis-Plus and X4R-SB
-      float scale = 0.615;  
-      float bias  = 895.0; 
+      // float scale = 0.615;  
+      // float bias  = 895.0; 
+      float scale = 1.0;  
+      float bias  = 0.0; 
       channel_1_pwm = sbusChannels[0] * scale + bias;
       channel_2_pwm = sbusChannels[1] * scale + bias;
       channel_3_pwm = sbusChannels[2] * scale + bias;
       channel_4_pwm = sbusChannels[3] * scale + bias;
       channel_5_pwm = sbusChannels[4] * scale + bias;
       channel_6_pwm = sbusChannels[5] * scale + bias; 
+      channel_7_pwm = sbusChannels[7] * scale + bias; 
     }
 
   #elif defined USE_DSM_RX
