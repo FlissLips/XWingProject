@@ -331,10 +331,12 @@ void loop() {
 
   //Compute desired state
   getDesState(); //Convert raw commands to normalized values based on saturated control limits
-  
+
+  // Compute desired mode
+  getMode();
   //PID Controller - SELECT ONE:
-  controlANGLE(); //Stabilize on angle setpoint
-  //controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
+  //controlANGLE(); //Stabilize on angle setpoint
+  controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
   //controlRATE(); //Stabilize on rate setpoint
 
   //Actuator mixing and scaling to PWM values
