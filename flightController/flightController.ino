@@ -97,7 +97,7 @@ unsigned long channel_3_fs = 1500; //elev
 unsigned long channel_4_fs = 1500; //rudd
 unsigned long channel_5_fs = 1811; //gear, greater than 1500 = throttle cut
 unsigned long channel_6_fs = 1811; //aux1
-unsigned long channel_7_fs = 1811; //aux2
+unsigned long channel_7_fs = 2000; //aux2
 
 //Filter parameters - Defaults tuned for 2kHz loop rate; Do not touch unless you know what you are doing:
 float B_madgwick = 0.04;  //Madgwick filter parameter
@@ -395,10 +395,3 @@ void loop() {
   failsafeHeight(); // Prevents failures in event of being too far away in Z-axis/Up
   loopRate(2000); //Do not exceed 2000Hz, all filter parameters tuned to 2000Hz by default
 }
-
-
-
-//========================================================================================================================//
-//                                                      FUNCTIONS                                                         //                           
-//========================================================================================================================//
-

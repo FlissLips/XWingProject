@@ -1,4 +1,7 @@
-// Changed
+//========================================================================================================================//
+//                                                      FUNCTIONS                                                         //                           
+//========================================================================================================================//
+
 void controlMixer()
 {
   // DESCRIPTION: Mixes scaled commands from PID controller to actuator outputs based on vehicle configuration
@@ -38,7 +41,6 @@ void controlMixer()
   s4_command_scaled = asin(servo_calculation);
 }
 
-// CHANGED FOR OUR IMU
 void IMUinit()
 {
   // DESCRIPTION: Initialize IMU
@@ -54,6 +56,7 @@ void IMUinit()
     Serial.println("Check Wiring... or maybe the I2C address..?");
   }
 }
+
 void barometerUnit()
 {
   // DESCRIPTION: Initialise Barometer
@@ -108,7 +111,6 @@ void ultrasonicUnit()
   }
 }
 
-// CHANGED FOR OUR IMU
 void getIMUdata()
 {
   // DESCRIPTION: Request full dataset from IMU and LP filter gyro, accelerometer, and magnetometer data
@@ -204,7 +206,6 @@ void getUltrasonicData()
   ultrasonicAltitude = ultrasonicDistanceCM / 100;
 }
 
-// CHANGED FOR OUR IMU
 void calculate_IMU_error()
 {
   // DESCRIPTION: Computes IMU accelerometer and gyro error on startup. Note: vehicle should be powered up on flat surface
@@ -278,7 +279,6 @@ void calculate_IMU_error()
   Serial.println("Paste these values in user specified variables section and comment out calculate_IMU_error() in void setup.");
 }
 
-// UNCHANGED
 void calibrateAttitude()
 {
   // DESCRIPTION: Used to warm up the main loop to allow the madwick filter to converge before commands can be sent to the actuators
@@ -299,7 +299,6 @@ void calibrateAttitude()
   }
 }
 
-// UNCHANGED
 void Madgwick(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float invSampleFreq)
 {
   // DESCRIPTION: Attitude estimation through sensor fusion - 9DOF
@@ -422,7 +421,7 @@ void Madgwick(float gx, float gy, float gz, float ax, float ay, float az, float 
   pitch_IMU = -asin(-2.0f * (q1 * q3 - q0 * q2)) * 57.29577951;                // degrees
   yaw_IMU = -atan2(q1 * q2 + q0 * q3, 0.5f - q2 * q2 - q3 * q3) * 57.29577951; // degrees
 }
-// UNCHANGED
+
 void Madgwick6DOF(float gx, float gy, float gz, float ax, float ay, float az, float invSampleFreq)
 {
   // DESCRIPTION: Attitude estimation through sensor fusion - 6DOF
@@ -525,7 +524,6 @@ void kalmanFilter()
   fusedAltitudeError = filter.covariance(2, 2);
 }
 
-// Changed
 void getDesState()
 {
   // DESCRIPTION: Normalizes desired control values to appropriate values
@@ -596,7 +594,6 @@ void getMode()
   }
 }
 
-// UNCHANGED (Might not use...)
 void controlANGLE()
 {
   // DESCRIPTION: Computes control commands based on state error (angle)
@@ -653,7 +650,6 @@ void controlANGLE()
   integral_yaw_prev = integral_yaw;
 }
 
-// NEED UPDATING ()
 void controlANGLE2()
 {
   // DESCRIPTION: Computes control commands based on state error (angle) in cascaded scheme
@@ -801,7 +797,6 @@ void controlANGLE2()
   integral_yaw_prev = integral_yaw;
 }
 
-// UNCHANGED (But probably won't be used)
 void controlRATE()
 {
   // DESCRIPTION: Computes control commands based on state error (rate)
@@ -854,7 +849,6 @@ void controlRATE()
   integral_yaw_prev = integral_yaw;
 }
 
-// CHANGED
 void scaleCommands()
 {
   // DESCRIPTION: Scale normalized actuator commands to values for ESC/Servo protocol
@@ -887,7 +881,6 @@ void scaleCommands()
   s4_command_PWM = constrain(s4_command_PWM, 0, 180);
 }
 
-// CHANGED
 void getCommands()
 {
   // DESCRIPTION: Get raw PWM values for every channel from the radio
@@ -898,15 +891,7 @@ void getCommands()
    * The raw radio commands are filtered with a first order low-pass filter to eliminate any really high frequency noise.
    */
 
-#if defined USE_PPM_RX || defined USE_PWM_RX
-  channel_1_pwm = getRadioPWM(1);
-  channel_2_pwm = getRadioPWM(2);
-  channel_3_pwm = getRadioPWM(3);
-  channel_4_pwm = getRadioPWM(4);
-  channel_5_pwm = getRadioPWM(5);
-  channel_6_pwm = getRadioPWM(6);
 
-#elif defined USE_SBUS_RX
   bfs::SbusData data;
   int number_of_channels = 7;
   if (sbus.Read())
@@ -933,25 +918,6 @@ void getCommands()
     channel_7_pwm = sbusChannels[7] * scale + bias;
   }
 
-#elif defined USE_DSM_RX
-  if (DSM.timedOut(micros()))
-  {
-    // Serial.println("*** DSM RX TIMED OUT ***");
-  }
-  else if (DSM.gotNewFrame())
-  {
-    uint16_t values[num_DSM_channels];
-    DSM.getChannelValues(values, num_DSM_channels);
-
-    channel_1_pwm = values[0];
-    channel_2_pwm = values[1];
-    channel_3_pwm = values[2];
-    channel_4_pwm = values[3];
-    channel_5_pwm = values[4];
-    channel_6_pwm = values[5];
-  }
-#endif
-
   // Low-pass the critical commands and update previous values
   float b = 0.7; // Lower=slower, higher=noiser
   channel_1_pwm = (1.0 - b) * channel_1_pwm_prev + b * channel_1_pwm;
@@ -964,7 +930,6 @@ void getCommands()
   channel_4_pwm_prev = channel_4_pwm;
 }
 
-// UNCHANGED
 void failSafe()
 {
   // DESCRIPTION: If radio gives garbage values, set all commands to default values
@@ -1060,7 +1025,7 @@ void failsafeHeight()
  }
 
 }
-// Changed
+
 void commandMotors()
 {
   // DESCRIPTION: Send pulses to motor pins, oneshot125 protocol
@@ -1082,8 +1047,6 @@ void commandMotors()
   digitalWrite(m2Pin, HIGH);
   digitalWrite(m3Pin, HIGH);
   digitalWrite(m4Pin, HIGH);
-  // digitalWrite(m5Pin, HIGH);
-  // digitalWrite(m6Pin, HIGH);
   pulseStart = micros();
 
   // Write each motor pin low as correct pulse length is reached
@@ -1114,20 +1077,9 @@ void commandMotors()
       wentLow = wentLow + 1;
       flagM4 = 1;
     }
-    // if ((m5_command_PWM <= timer - pulseStart) && (flagM5==0)) {
-    //   digitalWrite(m5Pin, LOW);
-    //   wentLow = wentLow + 1;
-    //   flagM5 = 1;
-    // }
-    // if ((m6_command_PWM <= timer - pulseStart) && (flagM6==0)) {
-    //   digitalWrite(m6Pin, LOW);
-    //   wentLow = wentLow + 1;
-    //   flagM6 = 1;
-    // }
   }
 }
 
-// UNCHANGED
 void armMotors()
 {
   // DESCRIPTION: Sends many command pulses to the motors, to be used to arm motors in the void setup()
@@ -1143,7 +1095,6 @@ void armMotors()
   }
 }
 
-// NEED CHANGING
 void calibrateESCs()
 {
   // DESCRIPTION: Used in void setup() to allow standard ESC calibration procedure with the radio to take place.
@@ -1171,15 +1122,10 @@ void calibrateESCs()
     m2_command_scaled = thro_des;
     m3_command_scaled = thro_des;
     m4_command_scaled = thro_des;
-    m5_command_scaled = thro_des;
-    m6_command_scaled = thro_des;
     s1_command_scaled = thro_des;
     s2_command_scaled = thro_des;
     s3_command_scaled = thro_des;
     s4_command_scaled = thro_des;
-    s5_command_scaled = thro_des;
-    s6_command_scaled = thro_des;
-    s7_command_scaled = thro_des;
     scaleCommands(); // Scales motor commands to 125 to 250 range (oneshot125 protocol) and servo PWM commands to 0 to 180 (for servo library)
 
     // throttleCut(); //Directly sets motor commands to low based on state of ch5
@@ -1199,7 +1145,6 @@ void calibrateESCs()
   }
 }
 
-// UNCHANGED
 float floatFaderLinear(float param, float param_min, float param_max, float fadeTime, int state, int loopFreq)
 {
   // DESCRIPTION: Linearly fades a float type variable between min and max bounds based on desired high or low state and time
@@ -1228,7 +1173,6 @@ float floatFaderLinear(float param, float param_min, float param_max, float fade
   return param;
 }
 
-// UNCHANGED
 float floatFaderLinear2(float param, float param_des, float param_lower, float param_upper, float fadeTime_up, float fadeTime_down, int loopFreq)
 {
   // DESCRIPTION: Linearly fades a float type variable from its current value to the desired value, up or down
@@ -1256,7 +1200,6 @@ float floatFaderLinear2(float param, float param_des, float param_lower, float p
   return param;
 }
 
-// UNCHANGED
 void switchRollYaw(int reverseRoll, int reverseYaw)
 {
   // DESCRIPTION: Switches roll_des and yaw_des variables for tailsitter-type configurations
@@ -1274,7 +1217,6 @@ void switchRollYaw(int reverseRoll, int reverseYaw)
   roll_des = reverseRoll * switch_holder;
 }
 
-// CHANGED
 void throttleCut()
 {
   // DESCRIPTION: Directly set actuator outputs to minimum value if triggered
@@ -1299,7 +1241,6 @@ void throttleCut()
   }
 }
 
-// UNCHANGED
 void loopRate(int freq)
 {
   // DESCRIPTION: Regulate main loop rate to specified frequency in Hz
@@ -1319,7 +1260,7 @@ void loopRate(int freq)
     checker = micros();
   }
 }
-// UNCHANGED
+
 void loopBlink()
 {
   // DESCRIPTION: Blink LED on board to indicate main loop is running
@@ -1343,7 +1284,7 @@ void loopBlink()
     }
   }
 }
-// UNCHANGED
+
 void setupBlink(int numBlinks, int upTime, int downTime)
 {
   // DESCRIPTION: Simple function to make LED on board blink as desired
