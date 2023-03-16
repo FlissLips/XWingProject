@@ -1445,6 +1445,15 @@ void printKalmanFilter(){
   }
 }
 
+void printMode(){
+  if (current_time - print_counter > 10000)
+  {
+   print_counter = micros();
+   Serial.print(F("Current Mode: "));
+   Serial.print(mode); 
+  }  
+}
+
 void printLoopRate()
 {
   if (current_time - print_counter > 10000)
