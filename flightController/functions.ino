@@ -1397,10 +1397,6 @@ void printMotorCommands()
     Serial.print(m3_command_PWM);
     Serial.print(F(" m4_command: "));
     Serial.print(m4_command_PWM);
-    Serial.print(F(" m5_command: "));
-    Serial.print(m5_command_PWM);
-    Serial.print(F(" m6_command: "));
-    Serial.println(m6_command_PWM);
   }
 }
 
@@ -1417,14 +1413,9 @@ void printServoCommands()
     Serial.print(s3_command_PWM);
     Serial.print(F(" s4_command: "));
     Serial.print(s4_command_PWM);
-    Serial.print(F(" s5_command: "));
-    Serial.print(s5_command_PWM);
-    Serial.print(F(" s6_command: "));
-    Serial.print(s6_command_PWM);
-    Serial.print(F(" s7_command: "));
-    Serial.println(s7_command_PWM);
   }
 }
+
 
 void printLoopRate()
 {
