@@ -1,8 +1,7 @@
-//Arduino/Teensy Flight Controller - dRehmFlight
-//Author: Nicholas Rehm
+//Arduino/Teensy Flight Controller with extras for ASDP Project 2022-2023
+//Author: Nicholas Rehm + Felicity Lipscomb
 //Project Start: 1/6/2020
-//Last Updated: 7/29/2022
-//Version: Beta 1.3
+//Last Updated: 16/03/2023
  
 //========================================================================================================================//
 
