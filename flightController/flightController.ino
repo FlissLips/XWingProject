@@ -51,6 +51,8 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 #define ACCEL_SCALE_FACTOR 9.8
 #define GYRO_SCALE_FACTOR 1
 
+#define C1 1125.0
+#define C2 137500.0
 
 // #if defined GYRO_250DPS
 //   #define GYRO_SCALE GYRO_FS_SEL_250
@@ -252,11 +254,13 @@ void setup() {
   pinMode(m2Pin, OUTPUT);
   pinMode(m3Pin, OUTPUT);
   pinMode(m4Pin, OUTPUT);
- 
+  pinMode(distanceSensorPin,INPUT);
+
   servo1.attach(servo1Pin, 900, 2100); //Pin, min PWM value, max PWM value
   servo2.attach(servo2Pin, 900, 2100);
   servo3.attach(servo3Pin, 900, 2100);
   servo4.attach(servo4Pin, 900, 2100);
+
 
 
   //Set built in LED to turn on to signal startup

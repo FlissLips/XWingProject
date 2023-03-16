@@ -55,9 +55,6 @@ void IMUinit()
         // if it cannot detect the BNO055
         Serial.println("BNO055 initialization unsuccessful");
         Serial.println("Check Wiring... or maybe the I2C address..?");
-        while (1)
-        {
-        }
     }
 
 }
@@ -87,8 +84,7 @@ void ultrasonicUnit()
   */
   Serial.println("Testing the ultrasonic distance Sensor...");
   int BUF_SIZE = 30;
-  int C1 = 1125;
-  int C2 = 137500.0;
+  
   uint16_t buffer[BUF_SIZE] = {0};
   int counter = 0;
 
@@ -200,7 +196,17 @@ void getBarometerData() {
  barometerAltitude = barometer_read_altitude();
 }
 
+void getUltrasonicData(){
+  // DESCRIPTION: gets distance data from ultrasonic sensor
+  float ultrasonicMeasurement= analogRead(distanceSensorPin);
 
+  // Translate measurement to distance in cm
+  float ultrasonicDistanceCM = 1/((ultrasonicMeasurement - C1)/C2);
+
+  // cm to m
+  ultrasonicAltitude = ultrasonicDistanceCM/100;
+
+}
 
 // CHANGED FOR OUR IMU
 void calculate_IMU_error() {
