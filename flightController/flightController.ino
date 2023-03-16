@@ -213,6 +213,12 @@ float q1 = 0.0f;
 float q2 = 0.0f;
 float q3 = 0.0f;
 
+// Barometer
+float barometerAltitude;
+
+// Ultrasonic Distance Sensor
+float ultrasonicAltitude;
+
 //Normalized desired state:
 float thro_des, roll_des, pitch_des, yaw_des;
 float roll_passthru, pitch_passthru, yaw_passthru;
