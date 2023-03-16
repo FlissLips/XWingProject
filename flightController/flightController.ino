@@ -147,8 +147,11 @@ float Kp_yaw = 0.3;           //Yaw P-gain
 float Ki_yaw = 0.05;          //Yaw I-gain
 float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
-
 float length = 0.5;           // length from servoes to the centre of motors (mS)
+
+// Altitude parameters for failsafes
+float maxAlt = 100.0;
+float minAlt = 0.2;
 //========================================================================================================================//
 //                                                     DECLARE PINS                                                       //                           
 //========================================================================================================================//                                          
@@ -353,7 +356,12 @@ void loop() {
 
   //Get vehicle state
   getIMUdata(); //Pulls raw gyro, accelerometer, and magnetometer data from IMU and LP filters to remove noise
+  getBarometerData(); //Pulls raw altitude data from barometer
+  getUltrasonicData(); // Pulls raw distance data from ultrasonic sensor
+  
+  // Sensor fusion for attitude and altitude estimation
   Madgwick(GyroX, -GyroY, -GyroZ, -AccX, AccY, AccZ, MagY, -MagX, MagZ, dt); //Updates roll_IMU, pitch_IMU, and yaw_IMU angle estimates (degrees)
+  kalmanFilter();
 
   //Compute desired state
   getDesState(); //Convert raw commands to normalized values based on saturated control limits
@@ -383,7 +391,7 @@ void loop() {
   //Get vehicle commands for next loop iteration
   getCommands(); //Pulls current available radio commands
   failSafe(); //Prevent failures in event of bad receiver connection, defaults to failsafe values assigned in setup
-
+  failsafeGround(); // Prevents failures in event of too close to the ground
   //Regulate loop rate
   loopRate(2000); //Do not exceed 2000Hz, all filter parameters tuned to 2000Hz by default
 }
