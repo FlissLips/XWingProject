@@ -69,7 +69,10 @@ void barometerUnit()
   * Also had to use our own library, since the original library.
   * didn't work on Teensy. 
   */
- if (!HP20x.begin()){
+ barometer_begin();
+ unsigned char available = barometer_available();
+
+ if (available != 0X80){
   Serial.println("Barometer does not work...");
   Serial.println("Check Wiring... or maybe the I2C address..?"); 
   }
@@ -188,6 +191,16 @@ void getIMUdata()
     MagY_prev = MagY;
     MagZ_prev = MagZ;
 }
+
+void getBarometerData() {
+  // DESCRIPTION: gets barometer data and sends it to barometerAltitude
+  /*
+  * Created by us
+  */
+ barometerAltitude = barometer_read_altitude();
+}
+
+
 
 // CHANGED FOR OUR IMU
 void calculate_IMU_error() {
