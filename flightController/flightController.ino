@@ -99,6 +99,24 @@ unsigned long channel_5_fs = 1811; //gear, greater than 1500 = throttle cut
 unsigned long channel_6_fs = 1811; //aux1
 unsigned long channel_7_fs = 1811; //aux2
 
+// Radio failsafe values for failsafeGround()
+unsigned long channel_1_fsg = 1000; //thro
+unsigned long channel_2_fsg = 1500; //ail
+unsigned long channel_3_fsg = 1500; //elev
+unsigned long channel_4_fsg = 1500; //rudd
+unsigned long channel_5_fsg = 1811; //gear, greater than 1500 = throttle cut
+unsigned long channel_6_fsg = 1811; //aux1
+unsigned long channel_7_fsg = 1811; //aux2
+
+// Radio failsafe values for failsafeHeight()
+unsigned long channel_1_fsh = 1000; //thro
+unsigned long channel_2_fsh = 1500; //ail
+unsigned long channel_3_fsh = 1500; //elev
+unsigned long channel_4_fsh = 1500; //rudd
+unsigned long channel_5_fsh = 1811; //gear, greater than 1500 = throttle cut
+unsigned long channel_6_fsh = 1811; //aux1
+unsigned long channel_7_fsh = 1811; //aux2
+
 //Filter parameters - Defaults tuned for 2kHz loop rate; Do not touch unless you know what you are doing:
 float B_madgwick = 0.04;  //Madgwick filter parameter
 float B_accel = 0.14;     //Accelerometer LP filter paramter, (MPU6050 default: 0.14. MPU9250 default: 0.2)
