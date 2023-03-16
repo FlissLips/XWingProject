@@ -1416,7 +1416,23 @@ void printServoCommands()
   }
 }
 
+void printBarometer(){
+  if (current_time - print_counter > 10000)
+  {
+   print_counter = micros();
+   Serial.print(F("Barometer measure (m): "));
+   Serial.print(barometerAltitude); 
+  }
+}
 
+void printUltrasonicSensor(){
+  if (current_time - print_counter > 10000)
+  {
+   print_counter = micros();
+   Serial.print(F("Ultrasonic sensor measure (m): "));
+   Serial.print(ultrasonicAltitude); 
+  }
+}
 void printLoopRate()
 {
   if (current_time - print_counter > 10000)
