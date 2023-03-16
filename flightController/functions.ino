@@ -992,13 +992,13 @@ void failsafeGround()
   if (mode == 1 && fusedAltitude <= minAlt)
   {
     // Adjust to safe commands
-    channel_1_pwm = channel_1_fs;
-    channel_2_pwm = channel_2_fs;
-    channel_3_pwm = channel_3_fs;
-    channel_4_pwm = channel_4_fs;
-    channel_5_pwm = channel_5_fs;
-    channel_6_pwm = channel_6_fs;
-    channel_7_pwm = channel_7_fs;
+    channel_1_pwm = channel_1_fsg;
+    channel_2_pwm = channel_2_fsg;
+    channel_3_pwm = channel_3_fsg;
+    channel_4_pwm = channel_4_fsg;
+    channel_5_pwm = channel_5_fsg;
+    channel_6_pwm = channel_6_fsg;
+    channel_7_pwm = channel_7_fsg;
     Serial.println("Too close to the ground!!");
   }
 }
@@ -1014,13 +1014,13 @@ void failsafeHeight()
  if (fusedAltitude >= maxAlt)
  {
   // Adjust to safe commands
-    channel_1_pwm = channel_1_fs;
-    channel_2_pwm = channel_2_fs;
-    channel_3_pwm = channel_3_fs;
-    channel_4_pwm = channel_4_fs;
-    channel_5_pwm = channel_5_fs;
-    channel_6_pwm = channel_6_fs;
-    channel_7_pwm = channel_7_fs;
+    channel_1_pwm = channel_1_fsh;
+    channel_2_pwm = channel_2_fsh;
+    channel_3_pwm = channel_3_fsh;
+    channel_4_pwm = channel_4_fsh;
+    channel_5_pwm = channel_5_fsh;
+    channel_6_pwm = channel_6_fsh;
+    channel_7_pwm = channel_7_fsh;
     Serial.println("Too far away!!");
  }
 
