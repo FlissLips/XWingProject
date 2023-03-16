@@ -1024,7 +1024,7 @@ void failsafeGround()
 
   // Check if we are in the vertical flight mode (AKA mode 1) and that the min
   // altitude has not been achieved
-  if (mode == 1 && fusedAltitude < minAlt)
+  if (mode == 1 && fusedAltitude <= minAlt)
   {
     // Adjust to safe commands
     channel_1_pwm = channel_1_fs;
@@ -1034,9 +1034,32 @@ void failsafeGround()
     channel_5_pwm = channel_5_fs;
     channel_6_pwm = channel_6_fs;
     channel_7_pwm = channel_7_fs;
+    Serial.println("Too close to the ground!!");
   }
 }
 
+void failsafeHeight()
+{
+  // DESCRIPTION: Fail-safe measure if drone is too far away
+  /*
+  * This is not mode dependent, and will currently set the radio values to the fail-safe ones.
+  * Will look into better ways to do this...
+  */
+ // Check if max altitude has not been achieved
+ if (fusedAltitude >= maxAlt)
+ {
+  // Adjust to safe commands
+    channel_1_pwm = channel_1_fs;
+    channel_2_pwm = channel_2_fs;
+    channel_3_pwm = channel_3_fs;
+    channel_4_pwm = channel_4_fs;
+    channel_5_pwm = channel_5_fs;
+    channel_6_pwm = channel_6_fs;
+    channel_7_pwm = channel_7_fs;
+    Serial.println("Too far away!!");
+ }
+
+}
 // Changed
 void commandMotors()
 {

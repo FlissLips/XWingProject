@@ -391,8 +391,8 @@ void loop() {
   //Get vehicle commands for next loop iteration
   getCommands(); //Pulls current available radio commands
   failSafe(); //Prevent failures in event of bad receiver connection, defaults to failsafe values assigned in setup
-  failsafeGround(); // Prevents failures in event of too close to the ground
-  //Regulate loop rate
+  failsafeGround(); // Prevents failures in event of being too close to the ground
+  failsafeHeight(); // Prevents failures in event of being too far away in Z-axis/Up
   loopRate(2000); //Do not exceed 2000Hz, all filter parameters tuned to 2000Hz by default
 }
 
