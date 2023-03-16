@@ -45,6 +45,10 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 #include <SharpIR.h> // For the SharpIR GP2Y0A710K distance sensor
 #include <sbus.h> // SBus Communication
 #include  <barometer_dubbed.h>// For the Grove barometer HP20
+#include <kalmanFilter.h> // For the Kalman filter
+#include <BasicLinearAlgebra.h> // For matrix algebra
+#include <ElementStorage.h> // Also for martrix algebra
+
 //========================================================================================================================
 //Setup gyro and accel full scale value selection and scale factor
 
@@ -221,6 +225,10 @@ float barometerAltitude;
 // Ultrasonic Distance Sensor
 float ultrasonicAltitude;
 
+// Fused altitude:
+KF filter;
+float fusedAltitude;
+float fusedAltitudeError;
 //Normalized desired state:
 float thro_des, roll_des, pitch_des, yaw_des;
 float roll_passthru, pitch_passthru, yaw_passthru;

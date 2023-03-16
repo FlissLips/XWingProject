@@ -208,6 +208,7 @@ void getUltrasonicData(){
 
 }
 
+
 // CHANGED FOR OUR IMU
 void calculate_IMU_error() {
   //DESCRIPTION: Computes IMU accelerometer and gyro error on startup. Note: vehicle should be powered up on flat surface
@@ -502,6 +503,27 @@ void Madgwick6DOF(float gx, float gy, float gz, float ax, float ay, float az, fl
   roll_IMU = atan2(q0*q1 + q2*q3, 0.5f - q1*q1 - q2*q2)*57.29577951; //degrees
   pitch_IMU = -asin(-2.0f * (q1*q3 - q0*q2))*57.29577951; //degrees
   yaw_IMU = -atan2(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3)*57.29577951; //degrees
+}
+
+void kalmanFilter(){
+  //DESCRIPTION: filters IMU, distance sensor and barometer to get fused altitude data
+
+  BLA::Matrix<1,3> observation_matrix_position = {0,0,1};
+  BLA::Matrix<1> measurement_noise_barometer = {100};
+  BLA::Matrix<1> measurment_noise_dist_snr = {10};
+  BLA::Matrix<1,3> observation_matrix_acc = {1,0,0};
+  BLA::Matrix<1> measurement_noise_acc = {5};
+  filter.prediction_step(dt);
+  filter.update_step(observation_matrix_position, barometerAltitude, measurement_noise_barometer);
+  filter.update_step(observation_matrix_acc, AccZ, measurement_noise_acc);
+  filter.update_step(observation_matrix_position, ultrasonicAltitude, measurment_noise_dist_snr);
+
+  fusedAltitude = filter.state(2);
+  fusedAltitudeError = filter.covariance(2,2);
+  
+
+
+
 }
 
 //Changed
