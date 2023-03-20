@@ -1,5 +1,5 @@
 //========================================================================================================================//
-//                                                      FUNCTIONS                                                         //                           
+//                                                      FUNCTIONS                                                         //
 //========================================================================================================================//
 
 void controlMixer()
@@ -80,13 +80,12 @@ void ultrasonicUnit()
   // DESCRIPTION: Initalise ultrasonic distance sensor
   /*
    * This is added by us, and is not tested as much.
-   *
+   * UPDATE: Tested using unit tests
    */
   Serial.println("Testing the ultrasonic distance Sensor...");
   int BUF_SIZE = 30;
 
   uint16_t buffer[BUF_SIZE] = {0};
-  int counter = 0;
 
   uint16_t reading = analogRead(distanceSensorPin);
   for (int i = 1; i < BUF_SIZE; i++)
@@ -97,19 +96,14 @@ void ultrasonicUnit()
   for (int i = 0; i < BUF_SIZE; i++)
     avg += buffer[i];
   avg /= BUF_SIZE;
-
   double readingMillivolts = 1000.0 * avg * (5.0 / 1024.0);
   double distanceCentimetres = 1.0 / ((readingMillivolts - C1) / C2);
-  delay(1);
-  if (counter++ >= 1000)
-  {
-    counter = 0;
-    Serial.print("Measuring current (unfiltered) distance as: ");
-    Serial.print(distanceCentimetres);
-    Serial.println("m. \n");
-    Serial.println("Please make sure this is correct.");
-  }
+  Serial.print("Measuring current (unfiltered) distance as: ");
+  Serial.print(distanceCentimetres);
+  Serial.println("m. \n");
+  Serial.println("Please make sure this is correct.");
 }
+
 
 void getIMUdata()
 {
@@ -891,7 +885,6 @@ void getCommands()
    * The raw radio commands are filtered with a first order low-pass filter to eliminate any really high frequency noise.
    */
 
-
   bfs::SbusData data;
   int number_of_channels = 7;
   if (sbus.Read())
@@ -1007,13 +1000,13 @@ void failsafeHeight()
 {
   // DESCRIPTION: Fail-safe measure if drone is too far away
   /*
-  * This is not mode dependent, and will currently set the radio values to the fail-safe ones.
-  * Will look into better ways to do this...
-  */
- // Check if max altitude has not been achieved
- if (fusedAltitude >= maxAlt)
- {
-  // Adjust to safe commands
+   * This is not mode dependent, and will currently set the radio values to the fail-safe ones.
+   * Will look into better ways to do this...
+   */
+  // Check if max altitude has not been achieved
+  if (fusedAltitude >= maxAlt)
+  {
+    // Adjust to safe commands
     channel_1_pwm = channel_1_fsh;
     channel_2_pwm = channel_2_fsh;
     channel_3_pwm = channel_3_fsh;
@@ -1022,8 +1015,7 @@ void failsafeHeight()
     channel_6_pwm = channel_6_fsh;
     channel_7_pwm = channel_7_fsh;
     Serial.println("Too far away!!");
- }
-
+  }
 }
 
 void commandMotors()
@@ -1416,42 +1408,46 @@ void printServoCommands()
   }
 }
 
-void printBarometer(){
+void printBarometer()
+{
   if (current_time - print_counter > 10000)
   {
-   print_counter = micros();
-   Serial.print(F("Barometer measure (m): "));
-   Serial.print(barometerAltitude); 
+    print_counter = micros();
+    Serial.print(F("Barometer measure (m): "));
+    Serial.print(barometerAltitude);
   }
 }
 
-void printUltrasonicSensor(){
+void printUltrasonicSensor()
+{
   if (current_time - print_counter > 10000)
   {
-   print_counter = micros();
-   Serial.print(F("Ultrasonic sensor measure (m): "));
-   Serial.print(ultrasonicAltitude); 
+    print_counter = micros();
+    Serial.print(F("Ultrasonic sensor measure (m): "));
+    Serial.print(ultrasonicAltitude);
   }
 }
 
-void printKalmanFilter(){
+void printKalmanFilter()
+{
   if (current_time - print_counter > 10000)
   {
-   print_counter = micros();
-   Serial.print(F("Kalman filter altitude (m): "));
-   Serial.print(fusedAltitude); 
-   Serial.print(F("Kalman filter altitude covariance: "));
-   Serial.print(fusedAltitudeError); 
+    print_counter = micros();
+    Serial.print(F("Kalman filter altitude (m): "));
+    Serial.print(fusedAltitude);
+    Serial.print(F("Kalman filter altitude covariance: "));
+    Serial.print(fusedAltitudeError);
   }
 }
 
-void printMode(){
+void printMode()
+{
   if (current_time - print_counter > 10000)
   {
-   print_counter = micros();
-   Serial.print(F("Current Mode: "));
-   Serial.print(mode); 
-  }  
+    print_counter = micros();
+    Serial.print(F("Current Mode: "));
+    Serial.print(mode);
+  }
 }
 
 void printLoopRate()
