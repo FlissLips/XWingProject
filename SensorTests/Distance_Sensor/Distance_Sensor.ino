@@ -1,5 +1,5 @@
 // Distance Sensor code without using the library.
-#define pinNo A0
+#define pinNo 17
 
 #define C1 1125.0
 #define C2 137500.0
@@ -27,6 +27,7 @@ void loop() {
 
   double readingMillivolts = 1000.0 * avg*(5.0/1024.0);
   double distanceCentimetres = 1.0 / ( (readingMillivolts - C1) / C2 );
+  distanceCentimetres += 50;
   delay(1);
   if(counter++ >= 1000)
   {
