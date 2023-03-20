@@ -568,12 +568,11 @@ void getMode()
    * There are 3 modes (Horizontal, Vertical, and Spinning), and the mode can be determined from the notes.
    * It also assumes the controller we using is still in use, with the maximum values 1811 and minimum 171.
    */
-  int min_value = 171;
-  int max_value = 1811;
+ 
 
   int mode_one_value, mode_two_value;
-  mode_one_value = (channel_6_pwm - min_value) / (max_value - min_value); // Between 0 and 1
-  mode_two_value = (channel_7_pwm - min_value) / (max_value - min_value); // Between 0 and 1
+  mode_one_value = (channel_6_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
+  mode_two_value = (channel_7_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
 
   if (mode_one_value == 0 && mode_two_value == 0)
   {
@@ -592,6 +591,19 @@ void getMode()
     mode = 0; // Default = Horizontal ??
   }
 }
+
+void getKillSwitch()
+{
+  //DESCRIPTION: Gets value from channel 8 AKA the rudder
+  kill_mode = (channel_6_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
+
+  // constrain within normalised bands (0-1)  
+  kill_mode = constrain(kill_mode, 0.0, 1.0);               // Between 0 and 1
+
+  
+
+}
+
 
 void controlANGLE()
 {
@@ -913,7 +925,8 @@ void getCommands()
     channel_4_pwm = sbusChannels[3] * scale + bias;
     channel_5_pwm = sbusChannels[4] * scale + bias;
     channel_6_pwm = sbusChannels[5] * scale + bias;
-    channel_7_pwm = sbusChannels[7] * scale + bias;
+    channel_7_pwm = sbusChannels[6] * scale + bias;
+    channel_8_pwm = sbusChannels[7] * scale + bias;
   }
 
   // Low-pass the critical commands and update previous values
@@ -1022,6 +1035,7 @@ void failsafeHeight()
     Serial.println("Too far away!!");
   }
 }
+
 
 void commandMotors()
 {

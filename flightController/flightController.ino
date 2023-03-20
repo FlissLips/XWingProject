@@ -35,8 +35,7 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 
 //========================================================================================================================//
 
-//REQUIRED LIBRARIES (included with download in main sketch folder)
-
+//REQUIRED LIBRARIES 
 #include <Wire.h>     //I2c communication
 #include <SPI.h>      //SPI communication
 #include <PWMServo.h> //Commanding any extra actuators, installed with teensyduino installer
@@ -56,6 +55,9 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 
 #define C1 1125.0
 #define C2 137500.0
+
+#define MAX_VALUE_SBUS 1811
+#define MIN_VALUE_SBUS 171
 
 // #if defined GYRO_250DPS
 //   #define GYRO_SCALE GYRO_FS_SEL_250
@@ -95,8 +97,10 @@ unsigned long channel_2_fs = 1500; //ail
 unsigned long channel_3_fs = 1500; //elev
 unsigned long channel_4_fs = 1500; //rudd
 unsigned long channel_5_fs = 1811; //gear, greater than 1500 = throttle cut
-unsigned long channel_6_fs = 1811; //aux1
-unsigned long channel_7_fs = 1811; //aux2
+unsigned long channel_6_fs = 171; //aux1
+unsigned long channel_7_fs = 171; //aux2
+unsigned long channel_8_fs = 171; //rudder
+
 
 // Radio failsafe values for failsafeGround()
 unsigned long channel_1_fsg = 1000; //thro
@@ -106,6 +110,7 @@ unsigned long channel_4_fsg = 1500; //rudd
 unsigned long channel_5_fsg = 1811; //gear, greater than 1500 = throttle cut
 unsigned long channel_6_fsg = 1811; //aux1
 unsigned long channel_7_fsg = 1811; //aux2
+unsigned long channel_8_fsg = 171; //rudder
 
 // Radio failsafe values for failsafeHeight()
 unsigned long channel_1_fsh = 1000; //thro
@@ -115,6 +120,7 @@ unsigned long channel_4_fsh = 1500; //rudd
 unsigned long channel_5_fsh = 1811; //gear, greater than 1500 = throttle cut
 unsigned long channel_6_fsh = 1811; //aux1
 unsigned long channel_7_fsh = 1811; //aux2
+unsigned long channel_8_fsh = 171; //rudder
 
 //Filter parameters - Defaults tuned for 2kHz loop rate; Do not touch unless you know what you are doing:
 float B_madgwick = 0.04;  //Madgwick filter parameter
@@ -217,7 +223,7 @@ unsigned long blink_counter, blink_delay;
 bool blinkAlternate;
 
 //Radio communication:
-unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm, channel_4_pwm, channel_5_pwm, channel_6_pwm,channel_7_pwm;
+unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm, channel_4_pwm, channel_5_pwm, channel_6_pwm,channel_7_pwm,channel_8_pwm;
 unsigned long channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev, channel_4_pwm_prev;
 
   bfs::SbusRx sbus(&Serial3);
@@ -253,6 +259,7 @@ float fusedAltitudeError;
 float thro_des, roll_des, pitch_des, yaw_des;
 float roll_passthru, pitch_passthru, yaw_passthru;
 
+
 //Controller:
 float error_roll, error_roll_prev, roll_des_prev, integral_roll, integral_roll_il, integral_roll_ol, integral_roll_prev, integral_roll_prev_il, integral_roll_prev_ol, derivative_roll, roll_PID = 0;
 float error_pitch, error_pitch_prev, pitch_des_prev, integral_pitch, integral_pitch_il, integral_pitch_ol, integral_pitch_prev, integral_pitch_prev_il, integral_pitch_prev_ol, derivative_pitch, pitch_PID = 0;
@@ -267,6 +274,8 @@ int s1_command_PWM, s2_command_PWM, s3_command_PWM, s4_command_PWM, s5_command_P
 // Mode:
 int mode; // 0 Horizontal, 1 = Vertical, 2 = Spinning
 
+// KILLSWITCH 0 = OFF, 1 = ON
+int kill_mode;
 
 //========================================================================================================================//
 //                                                      VOID SETUP                                                        //                           
@@ -306,6 +315,8 @@ void setup() {
   channel_4_pwm = channel_4_fs;
   channel_5_pwm = channel_5_fs;
   channel_6_pwm = channel_6_fs;
+  channel_7_pwm = channel_7_fs;
+  channel_8_pwm = channel_8_fs;
 
   //Initialize IMU communication
   IMUinit();
@@ -333,8 +344,7 @@ void setup() {
   m2_command_PWM = 125;
   m3_command_PWM = 125;
   m4_command_PWM = 125;
-  m5_command_PWM = 125;
-  m6_command_PWM = 125;
+
   armMotors(); //Loop over commandMotors() until ESCs happily arm
   
   //Indicate entering main loop with 3 quick blinks
