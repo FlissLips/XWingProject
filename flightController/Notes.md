@@ -6,9 +6,10 @@
 2. Aileron/Roll | (Left hand X-axis)
 3. Elevators/Pitch | (Right-Hand Y-axis)
 4. Rudder/Yaw | (Right-Hand X-axis)
-5. Gear/FailSafe Throttle Cut | (Has 3 switches but only 2 modes (OFF-ON-ON))
-6. Aux1/No current function (Switch ON/OFF)
-Will Add channel 7, so that 6 and 7 can be used to changed the mode 
+5. FailSafe Throttle Cut | (Has 3 switches but only 2 modes (OFF-ON-ON))
+6. Aux1
+7. Gear
+8. Rudder | Kill Switch
 
 ## Mode Idea (Vertical,Horizontal,Spinning)
 The modes will need to be triggered using 2 Binary switches (Channel 6 and 7)
@@ -17,6 +18,8 @@ The modes will need to be triggered using 2 Binary switches (Channel 6 and 7)
 | 0   | Horizontal/Regular Quadcopter | 0         | 0         |
 | 1   | Vertical/X Wing               | 1         | 0         |
 | 2   | Spinning Mode                 | 1         | 1         |
+
+A
 
 ## Controller Parameter Defaults (Add here just in case...)
 
