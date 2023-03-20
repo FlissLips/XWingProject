@@ -1,10 +1,14 @@
 #include <ArduinoUnit.h> // include the ArduinoUnit library
 #include <Adafruit_BNO055.h> // For the BNO055 IMU sensor
+#include <barometer_dubbed.h> // Dubbed library for the barometer
+
+
 #define C1 1125.0
 #define C2 137500.0
 Adafruit_BNO055 bno(55, 0x28, &Wire);
 int distanceSensorPin = 17; 
 double distanceCentimetres = 0;
+unsigned char available = '0';
 void ultrasonicUnit()
 {
   // DESCRIPTION: Initalise ultrasonic distance sensor
@@ -35,7 +39,6 @@ void ultrasonicUnit()
 
 }
 
-
 void IMUinit()
 {
   // DESCRIPTION: Initialize IMU
@@ -54,18 +57,47 @@ void IMUinit()
 }
 
 
-
-test(ultrasonic_test)
+void barometerUnit()
 {
-// Arrange
-  uint16_t expected = 100; // replace with expected distance in centimetres
+  // DESCRIPTION: Initialise Barometer
+  /*
+   * This is added by us, and is not tested as much.
+   * Also had to use our own library, since the original library.
+   * didn't work on Teensy.
+   */
+  barometer_begin();
+  delay(100);
+  available = barometer_available();
 
-  // // Act
-  ultrasonicUnit(); // call the function being tested
+  if (available != OK_HP20X_DEV)
+  {
+    Serial.println("Barometer does not work...");
+    Serial.println("Check Wiring... or maybe the I2C address..?");
+  }
+}
 
-  // // Assert
-  assertEqual(expected, distanceCentimetres); // check if the distance measured by the ultrasonic sensor matches the expected value
+// test(ultrasonic_test)
+// {
+// // Arrange
+//   uint16_t expected = 100; // replace with expected distance in centimetres
+
+//   // // Act
+//   ultrasonicUnit(); // call the function being tested
+
+//   // // Assert
+//   assertEqual(expected, distanceCentimetres); // check if the distance measured by the ultrasonic sensor matches the expected value
   
+// }
+
+test(barometer_init_test)
+{
+  // Arrange
+  unsigned char expected = OK_HP20X_DEV;
+ // Act
+ barometerUnit();
+ //Assert
+ assertEqual(expected, available);
+
 }
 
 test(IMU_test)
