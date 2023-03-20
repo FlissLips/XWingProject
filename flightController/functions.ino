@@ -28,10 +28,10 @@ void controlMixer()
   // m5_command_scaled = 0;
   // m6_command_scaled = 0;
 
-  m1_command_scaled = thro_des / 4 - pitch_PID / 2; // Forward motor
-  m2_command_scaled = thro_des / 4 + roll_PID / 2;  // Right motor
-  m3_command_scaled = thro_des / 4 + pitch_PID / 2; // Back motor
-  m4_command_scaled = thro_des / 4 - roll_PID / 2;  // Left motor
+  m1_command_scaled = -thro_des / 4 +pitch_PID / 2; // Forward motor
+  m2_command_scaled = -thro_des / 4 + roll_PID / 2;  // Right motor
+  m3_command_scaled = -thro_des / 4 - pitch_PID / 2; // Back motor
+  m4_command_scaled = -thro_des / 4 - roll_PID / 2;  // Left motor
 
   // 0.5 is centered servo, 0.0 is zero throttle if connecting to ESC for conventional PWM, 1.0 is max throttle
   float servo_calculation = yaw_PID / (length * thro_des);
@@ -595,7 +595,7 @@ void getMode()
 void getKillSwitch()
 {
   //DESCRIPTION: Gets value from channel 8 AKA the rudder
-  kill_mode = (channel_6_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
+  kill_mode = (channel_8_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
 
   // constrain within normalised bands (0-1)  
   kill_mode = constrain(kill_mode, 0.0, 1.0);               // Between 0 and 1
@@ -1036,7 +1036,14 @@ void failsafeHeight()
   }
 }
 
+void killCommands()
+{
+  // DESCRIPTION: Will kill everything if channel 8 is switched on
+  if (kill_mode == 1) //If kill mode is switched on
+  {
 
+  }
+}
 void commandMotors()
 {
   // DESCRIPTION: Send pulses to motor pins, oneshot125 protocol
