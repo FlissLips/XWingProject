@@ -66,12 +66,17 @@ void barometerUnit()
    * didn't work on Teensy.
    */
   barometer_begin();
+  delay(100); // NEEDS DELAY, DO NOT DELETE (Needs it to properly reset the barometer)
   unsigned char available = barometer_available();
 
-  if (available != 0X80)
+  if (available != OK_HP20X_DEV)
   {
     Serial.println("Barometer does not work...");
     Serial.println("Check Wiring... or maybe the I2C address..?");
+  }
+  else
+  {
+    Serial.println("Barometer Successful!");    
   }
 }
 
