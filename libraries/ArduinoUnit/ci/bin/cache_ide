@@ -1,0 +1,196 @@
+#!/bin/bash
+
+for inc in os dir dir_cache version arduino_exe package_install
+do
+    if [ "$(type -t $inc)" != "function" ]
+    then
+	. "$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"/$inc
+    fi
+done
+
+cache_ide() {
+    local OS="$(os "$@")"
+    local DIR="$(dir "$@")"
+    local DIR_CACHE="$(dir_cache "$@")"
+    local VERSION="$(version "$@")"
+    local ARDUINO_EXE="$(arduino_exe "$@")"    
+    
+    while [ $# -gt 0 ]
+    do
+        case "$1"
+        in
+            --tries=*)     local TRIES=${1#--tries=}; shift;;
+            --reload=*)    local RELOAD=${1#--reload=}; shift;;
+            --timeout=*)   local TIMEOUT=${1#--timeout=}; shift;;
+            --*=*)         shift;;
+            --)            shift; break;;
+            *)             break;;
+        esac
+    done
+
+    if [ -r "${ARDUINO_EXE}" -a "${RELOAD}" != "true" ]
+    then
+        return
+    fi
+
+    if [ ! -d "${DIR_CACHE}" ]
+    then
+	mkdir -p "${DIR_CACHE}"
+    fi
+
+    local PORTABLE="${DIR}/portable"
+    if [ ! -d "${PORTABLE}" ]
+    then
+        mkdir -p "${PORTABLE}"
+    fi
+
+    if [ "${EXTENSION}" = "" ]
+    then
+        if [ "${OS}" = "macosx" -o "${OS}" = "windows" ]
+        then
+            local EXTENSION="zip"
+        elif [ "${OS#linux}" != "${OS}" ]
+        then
+            local EXTENSION="tar.xz"
+        else
+            echo "Unsupported architecture."
+            exit 1
+        fi
+    fi
+
+    if [ "${TRIES}" = "" ]
+    then
+        local TRIES=3
+    fi
+    
+    if [ "${RELOAD}" = "" ]
+    then
+        local RELOAD=false
+    fi
+    
+    if [ "${TIMEOUT}" = "" ]
+    then
+        local TIMEOUT=10
+    fi
+    
+    local ARCHIVE="arduino-${VERSION}-${OS}.${EXTENSION}"
+    local CHECKSUM="arduino-${VERSION}.sha512sum.txt"
+    local CACHE="${DIR}/cache"
+    mkdir -p "${CACHE}"
+
+    if [ "${RELOAD}" = "true" ]
+    then
+	/bin/rm -rf "${CACHE}/${CHECKSUM}"
+    fi
+        
+    local OK=false
+    local TRY
+    for TRY in $(seq "${TRIES}")
+    do
+        if [ -r "${CACHE}/${CHECKSUM}" ]
+        then
+            if grep -q "${ARCHIVE}" "${CACHE}/${CHECKSUM}"
+            then
+                local OK=true
+                break
+            else
+                echo "cannot find ${ARCHIVE} in ${CACHE}/${CHECKSUM} (retry)"
+            fi
+        fi
+        curl --connect-timeout "$TIMEOUT" -o "${CACHE}/${CHECKSUM}" "https://downloads.arduino.cc/${CHECKSUM}"
+    done
+    
+    if [ "$OK" != "true" ]
+    then
+        echo "Download ${CHECKSUM} failed."
+	exit 1
+    fi
+        
+    if ! grep "${ARCHIVE}" "${CACHE}/${CHECKSUM}" > "${CACHE}/${ARCHIVE}.sha512sum.txt"
+    then
+        echo "No checksum for ${ARCHIVE} in ${CHECKSUM}."
+	exit 1
+    fi
+    
+    local OK=false
+    local TRY
+    for TRY in $(seq "${TRIES}")
+    do
+        if [ -r "${CACHE}/${ARCHIVE}" ]
+        then
+            if cd "${CACHE}" && shasum -a512 -c "${ARCHIVE}.sha512sum.txt" > /dev/null
+            then
+                local OK=true
+                break
+            fi
+        fi
+        /bin/rm -rf "${CACHE}/${ARCHIVE}"
+        curl --connect-timeout "${TIMEOUT}" -o "${CACHE}/${ARCHIVE}" "https://downloads.arduino.cc/${ARCHIVE}"
+    done
+        
+    if [ "${OK}" != "true" ]
+    then
+        echo "Download ${ARCHIVE} failed."
+	exit 1
+    fi
+
+    mkdir -p "${DIR_CACHE}"
+    pushd "${DIR_CACHE}"
+    if [ "${EXTENSION}" = "zip" ]
+    then
+	if ! which unzip
+	then
+	    package_install unzip
+	fi
+	unzip -a -o "${CACHE}/${ARCHIVE}" > /dev/null
+    else
+	if ! which tar
+	then
+	    package_install tar
+	fi
+	tar -xf "${CACHE}/${ARCHIVE}"
+    fi
+    
+    if [ "${OS}" = "macosx" ]
+    then
+	pushd Arduino.app/Contents/Java
+	ln -s ../../../../../portable portable
+	popd
+    else
+	pushd arduino-${VERSION}
+	ln -s ../../../portable portable
+	popd
+    fi
+
+    popd
+
+    if [ ! -r "${ARDUINO_EXE}" ]
+    then
+	echo "executable ${ARDUINO_EXE} missing."
+	exit 1
+    fi
+}
+
+cache_ide_self_test() {
+    local os
+    for os in macosx windows linux64
+    do
+	if ! cache_ide --os=$os "$@"
+	then
+	    echo "$os failed."
+	    exit 1
+	fi
+    done
+    echo "cache_ide ok"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
+then
+    if [ "$1" == "--self-test" ]
+    then
+	shift
+	cache_ide_self_test "$@"
+    else
+	cache_ide "$@"
+    fi
+fi

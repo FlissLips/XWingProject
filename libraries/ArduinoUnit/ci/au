@@ -1,0 +1,9 @@
+# find directory of this sourced context
+
+pushd $(dirname "${BASH_SOURCE[0]}") >/dev/null
+arduinounit_ci_bin="$PWD/bin"
+popd >/dev/null
+
+eval 'au() { local cmd="$1"; shift; "'"$arduinounit_ci_bin"'/$cmd" "$@"; }; export -f au;'
+
+

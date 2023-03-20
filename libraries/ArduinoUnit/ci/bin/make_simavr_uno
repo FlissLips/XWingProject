@@ -1,0 +1,124 @@
+#!/bin/bash
+
+for inc in dir os version cache_simavr avr_root arduino_exe package_install
+do
+    if [ "$(type -t $inc)" != "function" ]
+    then
+	. "$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"/$inc
+    fi
+done
+
+make_simavr_uno() {
+    local DIR="$(dir "$@")"
+    local OS="$(os "$@")"
+    local VERSION="$(version "$@")"
+    local ARDUINO_EXE="$(arduino_exe "$@")"
+    local AVR_ROOT="$(avr_root "$@")"    
+
+    while [ $# -gt 0 ]
+    do
+        case "$1"
+        in
+            --reload=*)    local RELOAD=${1#--reload=}; shift;;
+            --branch=*)    local BRANCH=${1#--branch=}; shift;;	    
+            --*=*)         shift;;
+            --)            shift; break;;
+            *)             break;;
+        esac
+    done
+
+    if [ "$BRANCH" = "" ]
+    then
+	local BRANCH=master
+    fi
+
+    if [ -x "$DIR/cache/${VERSION}-${OS}/simavr/uno" -a "$RELOAD" != "true" ]
+    then
+	return
+    fi
+
+    if [ ! -r "$ARDUINO_EXE" ]
+    then
+	echo "Arduido executable $ARDUINO_EXE missing (caching)..."
+	if ! cache_ide "$@"
+	then
+	    exit 1
+	fi
+    fi
+
+    if [ ! -d "$AVR_ROOT" ]
+    then
+	echo "Missing avr tools directory $AVR_ROOT."
+	exit 1
+    fi
+
+    if ! cache_simavr --dir=$DIR --reload=$RELOAD
+    then
+	exit 1
+    fi
+
+    if [ "$OS" = "macosx" ]
+    then
+        package_install libelf
+    else
+        package_install libelf-dev || package_install libelf-devel
+    fi
+
+    /bin/rm -rf "$DIR/cache/${VERSION}-${OS}/simavr/repo"
+    mkdir -p "$DIR/cache/${VERSION}-${OS}/simavr/repo"
+    tar -C "$DIR/cache/simavr" -cf - . | tar -C "$DIR/cache/${VERSION}-${OS}/simavr/repo" -xf -
+    git -C "$DIR/cache/${VERSION}-${OS}/simavr/repo" checkout -f "$BRANCH"
+
+    export AVR_ROOT
+    echo "AVR_ROOT=$AVR_ROOT"
+
+    if ! PATH="$AVR_ROOT/bin:$PATH" make -e -B -C "$DIR/cache/${VERSION}-${OS}/simavr/repo" clean build-simavr
+    then
+	echo "build-simavr target failed."
+	exit 1
+    fi
+
+    if ! PATH="$AVR_ROOT/bin:$PATH" make -e -B -C "$DIR/cache/${VERSION}-${OS}/simavr/repo/examples/board_simduino" clean all
+    then
+       echo "build board_simduino target failed."
+       exit 1
+    fi
+
+    cp "$DIR/cache/${VERSION}-${OS}/simavr/repo/examples/board_simduino/"obj*/simduino.elf "$DIR/cache/${VERSION}-${OS}/simavr/uno"
+
+    if [ ! -x "$DIR/cache/${VERSION}-${OS}/simavr/uno" ]
+    then
+	echo "build failed."
+	exit 1
+    fi
+}
+
+make_simavr_uno_self_test() {
+    local DIR="$(dir "$@")"
+    local OS="$(os "$@")"
+    local VERSION="$(version "$@")"
+
+    if make_simavr_uno
+    then
+        if [ ! -x "$DIR/cache/${VERSION}-${OS}/simavr/uno" ]
+        then
+            echo "no uno"
+            exit 1
+        fi
+    else
+        echo "make failed."
+        exit 1
+    fi
+    echo "make_simavr_uno ok"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
+then
+    if [ "$1" == "--self-test" ]
+    then
+        shift
+	make_simavr_uno_self_test "$@"
+    else
+	make_simavr_uno "$@"
+    fi
+fi
