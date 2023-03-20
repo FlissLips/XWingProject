@@ -2,7 +2,7 @@
 #include "sbus.h"
 
 /* SBUS object, reading SBUS */
-bfs::SbusRx sbus_rx(&Serial2);
+bfs::SbusRx sbus_rx(&Serial3);
 /* SBUS data */
 bfs::SbusData data;
 
@@ -26,9 +26,9 @@ void loop () {
     }
           Serial.println();
     /* Display lost frames and failsafe data */
-    // Serial.print(data.lost_frame);
-    // Serial.print("\t");
-    // Serial.println(data.failsafe);
+    Serial.print(data.lost_frame);
+    Serial.print("\t");
+    Serial.println(data.failsafe);
   }
 
 }
