@@ -28,7 +28,7 @@ void controlMixer()
   // m5_command_scaled = 0;
   // m6_command_scaled = 0;
 
-  m1_command_scaled = -thro_des / 4 +pitch_PID / 2; // Forward motor
+  m1_command_scaled = -thro_des / 4 + pitch_PID / 2; // Forward motor
   m2_command_scaled = -thro_des / 4 + roll_PID / 2;  // Right motor
   m3_command_scaled = -thro_des / 4 - pitch_PID / 2; // Back motor
   m4_command_scaled = -thro_des / 4 - roll_PID / 2;  // Left motor
@@ -76,7 +76,7 @@ void barometerUnit()
   }
   else
   {
-    Serial.println("Barometer Successful!");    
+    Serial.println("Barometer Successful!");
   }
 }
 
@@ -108,7 +108,6 @@ void ultrasonicUnit()
   Serial.println("m. \n");
   Serial.println("Please make sure this is correct.");
 }
-
 
 void getIMUdata()
 {
@@ -535,21 +534,15 @@ void getDesState()
    */
 
   // Needs to changed the range, as the range of our values are betweeen 171 and 1811
-  // thro_des = (channel_1_pwm - 1000.0)/1000.0; //Between 0 and 1
-  // roll_des = (channel_2_pwm - 1500.0)/500.0; //Between -1 and 1
-  // pitch_des = (channel_3_pwm - 1500.0)/500.0; //Between -1 and 1
-  // yaw_des = (channel_4_pwm - 1500.0)/500.0; //Between -1 and 1
-  // roll_passthru = roll_des/2.0; //Between -0.5 and 0.5
-  // pitch_passthru = pitch_des/2.0; //Between -0.5 and 0.5
-  // yaw_passthru = yaw_des/2.0; //Between -0.5 and 0.5
+      
+  thro_des = ((channel_1_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_THROTTLE) + MIN_VALUE_THROTTLE;    // Between 0 and 1
+  roll_des = ((channel_2_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;  // Between -1 and 1
+  pitch_des = ((channel_3_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE; // Between -1 and 1
+  yaw_des = ((channel_4_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;   // Between -1 and 1
 
-  thro_des = (channel_1_pwm - 171) / (1811 - 171);             // Between 0 and 1
-  roll_des = ((channel_2_pwm - 171) * 2) / (1811 - 171) + -1;  // Between -1 and 1
-  pitch_des = ((channel_3_pwm - 171) * 2) / (1811 - 171) + -1; // Between -1 and 1
-  yaw_des = ((channel_4_pwm - 171) * 2) / (1811 - 171) + -1;   // Between -1 and 1
-  roll_passthru = roll_des / 2.0;                              // Between -0.5 and 0.5
-  pitch_passthru = pitch_des / 2.0;                            // Between -0.5 and 0.5
-  yaw_passthru = yaw_des / 2.0;                                // Between -0.5 and 0.5
+  roll_passthru = roll_des / 2.0;   // Between -0.5 and 0.5
+  pitch_passthru = pitch_des / 2.0; // Between -0.5 and 0.5
+  yaw_passthru = yaw_des / 2.0;     // Between -0.5 and 0.5
 
   // Constrain within normalized bounds
   thro_des = constrain(thro_des, 0.0, 1.0);               // Between 0 and 1
@@ -568,7 +561,6 @@ void getMode()
    * There are 3 modes (Horizontal, Vertical, and Spinning), and the mode can be determined from the notes.
    * It also assumes the controller we using is still in use, with the maximum values 1811 and minimum 171.
    */
- 
 
   int mode_one_value, mode_two_value;
   mode_one_value = (channel_6_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
@@ -594,16 +586,12 @@ void getMode()
 
 void getKillSwitch()
 {
-  //DESCRIPTION: Gets value from channel 8 AKA the rudder
+  // DESCRIPTION: Gets value from channel 8 AKA the rudder
   kill_mode = (channel_8_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS); // Between 0 and 1
 
-  // constrain within normalised bands (0-1)  
-  kill_mode = constrain(kill_mode, 0.0, 1.0);               // Between 0 and 1
-
-  
-
+  // constrain within normalised bands (0-1)
+  kill_mode = constrain(kill_mode, 0.0, 1.0); // Between 0 and 1
 }
-
 
 void controlANGLE()
 {
@@ -1039,9 +1027,8 @@ void failsafeHeight()
 void killCommands()
 {
   // DESCRIPTION: Will kill everything if channel 8 is switched on
-  if (kill_mode == 1) //If kill mode is switched on
+  if (kill_mode == 1) // If kill mode is switched on
   {
-
   }
 }
 void commandMotors()
@@ -1336,7 +1323,7 @@ void printRadioCommands()
     Serial.print(channel_7_pwm);
     Serial.print(F("Channel 8: "));
     Serial.println(channel_8_pwm);
-  }  
+  }
 }
 
 // THE REST ARE ALL PRINT STATEMENTS...

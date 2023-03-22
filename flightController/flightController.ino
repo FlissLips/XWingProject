@@ -58,6 +58,9 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 
 #define MAX_VALUE_SBUS 1811
 #define MIN_VALUE_SBUS 171
+#define MIN_VALUE_THROTTLE 0
+#define MIN_VALUE_ANGLE -1
+#define MAX_VALUE_PWM 1
 
 // #if defined GYRO_250DPS
 //   #define GYRO_SCALE GYRO_FS_SEL_250
@@ -223,8 +226,8 @@ unsigned long blink_counter, blink_delay;
 bool blinkAlternate;
 
 //Radio communication:
-unsigned long channel_1_pwm, channel_2_pwm, channel_3_pwm, channel_4_pwm, channel_5_pwm, channel_6_pwm,channel_7_pwm,channel_8_pwm;
-unsigned long channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev, channel_4_pwm_prev;
+float channel_1_pwm, channel_2_pwm, channel_3_pwm, channel_4_pwm, channel_5_pwm, channel_6_pwm,channel_7_pwm,channel_8_pwm;
+float channel_1_pwm_prev, channel_2_pwm_prev, channel_3_pwm_prev, channel_4_pwm_prev;
 
   bfs::SbusRx sbus(&Serial3);
   uint16_t sbusChannels[16];
@@ -374,7 +377,7 @@ void loop() {  // servo1.write(0); //Command servo angle from 0-180 degrees (100
   loopBlink(); //Indicate we are in main loop with short blink every 1.5 seconds
 
   //Print data at 100hz (uncomment one at a time for troubleshooting) - SELECT ONE:
-  printRadioCommands();     //Prints radio pwm values (expected: 1000 to 2000)
+  // printRadioCommands();     //Prints radio pwm values (expected: 1000 to 2000)
   // printDesiredState();  //Prints desired vehicle state commanded in either degrees or deg/sec (expected: +/- maxAXIS for roll, pitch, yaw; 0 to 1 for throttle)
   // printGyroData();      //Prints filtered gyro data direct from IMU (expected: ~ -250 to 250, 0 at rest)
   // printAccelData();     //Prints filtered accelerometer data direct from IMU (expected: ~ -2 to 2; x,y 0 when level, z 1 when level)
