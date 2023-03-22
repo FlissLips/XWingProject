@@ -903,7 +903,7 @@ void getCommands()
    */
 
   bfs::SbusData data;
-  int number_of_channels = 7;
+  int number_of_channels = 8;
   if (sbus.Read())
   {
     data = sbus.data();
@@ -1313,6 +1313,30 @@ void setupBlink(int numBlinks, int upTime, int downTime)
     digitalWrite(13, HIGH);
     delay(upTime);
   }
+}
+
+void printRadioCommands()
+{
+  if (current_time - print_counter > 10000)
+  {
+    print_counter = micros();
+    Serial.print(F("Channel 1: "));
+    Serial.print(channel_1_pwm);
+    Serial.print(F("Channel 2: "));
+    Serial.print(channel_2_pwm);
+    Serial.print(F("Channel 3: "));
+    Serial.print(channel_3_pwm);
+    Serial.print(F("Channel 4: "));
+    Serial.println(channel_4_pwm);
+    Serial.print(F("Channel 5: "));
+    Serial.print(channel_5_pwm);
+    Serial.print(F("Channel 6: "));
+    Serial.print(channel_6_pwm);
+    Serial.print(F("Channel 7: "));
+    Serial.print(channel_7_pwm);
+    Serial.print(F("Channel 8: "));
+    Serial.println(channel_8_pwm);
+  }  
 }
 
 // THE REST ARE ALL PRINT STATEMENTS...

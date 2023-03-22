@@ -304,9 +304,9 @@ void setup() {
   digitalWrite(13, HIGH);
 
   delay(5);
-
+  Serial.println("Testing Radio Comms..");
   //Initialize radio communication
-  // radioSetup();
+  radioSetup();
   
   //Set radio channels to default (safe) values before entering main loop
   channel_1_pwm = channel_1_fs;
@@ -327,16 +327,16 @@ void setup() {
   //calculate_IMU_error(); //Calibration parameters printed to serial monitor. Paste these in the user specified variables section, then comment this out forever.
 
   //Arm servo channels
-  servo1.write(0); //Command servo angle from 0-180 degrees (1000 to 2000 PWM)
-  servo2.write(0); //Set these to 90 for servos if you do not want them to briefly max out on startup
-  servo3.write(0); //Keep these at 0 if you are using servo outputs for motors
-  servo4.write(0);
-
+  // servo1.write(0); //Command servo angle from 0-180 degrees (1000 to 2000 PWM)
+  // servo2.write(0); //Set these to 90 for servos if you do not want them to briefly max out on startup
+  // servo3.write(0); //Keep these at 0 if you are using servo outputs for motors
+  // servo4.write(0);
+  Serial.println("IMU is successful... moving on");
 
   
-  delay(5);
+  // delay(5);
 
-  //calibrateESCs(); //PROPS OFF. Uncomment this to calibrate your ESCs by setting throttle stick to max, powering on, and lowering throttle to zero after the beeps
+  // calibrateESCs(); //PROPS OFF. Uncomment this to calibrate your ESCs by setting throttle stick to max, powering on, and lowering throttle to zero after the beeps
   //Code will not proceed past here if this function is uncommented!
 
   //Arm OneShot125 motors
@@ -345,7 +345,7 @@ void setup() {
   m3_command_PWM = 125;
   m4_command_PWM = 125;
 
-  armMotors(); //Loop over commandMotors() until ESCs happily arm
+  // armMotors(); //Loop over commandMotors() until ESCs happily arm
   
   //Indicate entering main loop with 3 quick blinks
   setupBlink(3,160,70); //numBlinks, upTime (ms), downTime (ms)
@@ -361,7 +361,11 @@ void setup() {
 //                                                       MAIN LOOP                                                        //                           
 //========================================================================================================================//
                                                   
-void loop() {
+void loop() {  // servo1.write(0); //Command servo angle from 0-180 degrees (1000 to 2000 PWM)
+  // servo2.write(0); //Set these to 90 for servos if you do not want them to briefly max out on startup
+  // servo3.write(0); //Keep these at 0 if you are using servo outputs for motors
+  // servo4.write(0);
+
   //Keep track of what time it is and how much time has elapsed since the last loop
   prev_time = current_time;      
   current_time = micros();      
@@ -370,11 +374,11 @@ void loop() {
   loopBlink(); //Indicate we are in main loop with short blink every 1.5 seconds
 
   //Print data at 100hz (uncomment one at a time for troubleshooting) - SELECT ONE:
-  //printRadioData();     //Prints radio pwm values (expected: 1000 to 2000)
-  //printDesiredState();  //Prints desired vehicle state commanded in either degrees or deg/sec (expected: +/- maxAXIS for roll, pitch, yaw; 0 to 1 for throttle)
-  //printGyroData();      //Prints filtered gyro data direct from IMU (expected: ~ -250 to 250, 0 at rest)
-  //printAccelData();     //Prints filtered accelerometer data direct from IMU (expected: ~ -2 to 2; x,y 0 when level, z 1 when level)
-  //printMagData();       //Prints filtered magnetometer data direct from IMU (expected: ~ -300 to 300)
+  printRadioCommands();     //Prints radio pwm values (expected: 1000 to 2000)
+  // printDesiredState();  //Prints desired vehicle state commanded in either degrees or deg/sec (expected: +/- maxAXIS for roll, pitch, yaw; 0 to 1 for throttle)
+  // printGyroData();      //Prints filtered gyro data direct from IMU (expected: ~ -250 to 250, 0 at rest)
+  // printAccelData();     //Prints filtered accelerometer data direct from IMU (expected: ~ -2 to 2; x,y 0 when level, z 1 when level)
+  // printMagData();       //Prints filtered magnetometer data direct from IMU (expected: ~ -300 to 300)
   //printRollPitchYaw();  //Prints roll, pitch, and yaw angles in degrees from Madgwick filter (expected: degrees, 0 when level)
   //printPIDoutput();     //Prints computed stabilized PID variables from controller and desired setpoint (expected: ~ -1 to 1)
   //printMotorCommands(); //Prints the values being written to the motors (expected: 120 to 250)
@@ -388,16 +392,16 @@ void loop() {
   
   // Sensor fusion for attitude and altitude estimation
   Madgwick(GyroX, -GyroY, -GyroZ, -AccX, AccY, AccZ, MagY, -MagX, MagZ, dt); //Updates roll_IMU, pitch_IMU, and yaw_IMU angle estimates (degrees)
-  kalmanFilter();
+  // kalmanFilter();
 
   //Compute desired state
   getDesState(); //Convert raw commands to normalized values based on saturated control limits
 
   // Compute desired mode
-  getMode();
+  // getMode();
   //PID Controller - SELECT ONE:
-  //controlANGLE(); //Stabilize on angle setpoint
-  controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
+  controlANGLE(); //Stabilize on angle setpoint
+  // controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
   //controlRATE(); //Stabilize on rate setpoint
 
   //Actuator mixing and scaling to PWM values
@@ -405,20 +409,20 @@ void loop() {
   scaleCommands(); //Scales motor commands to 125 to 250 range (oneshot125 protocol) and servo PWM commands to 0 to 180 (for servo library)
 
   //Throttle cut check
-  throttleCut(); //Directly sets motor commands to low based on state of ch5
+  // throttleCut(); //Directly sets motor commands to low based on state of ch5
 
   //Command actuators
-  commandMotors(); //Sends command pulses to each motor pin using OneShot125 protocol
-  servo1.write(s1_command_PWM); //Writes PWM value to servo object
-  servo2.write(s2_command_PWM);
-  servo3.write(s3_command_PWM);
-  servo4.write(s4_command_PWM);
+  // commandMotors(); //Sends command pulses to each motor pin using OneShot125 protocol
+  // servo1.write(s1_command_PWM); //Writes PWM value to servo object
+  // servo2.write(s2_command_PWM);
+  // servo3.write(s3_command_PWM);
+  // servo4.write(s4_command_PWM);
  
     
   //Get vehicle commands for next loop iteration
   getCommands(); //Pulls current available radio commands
   failSafe(); //Prevent failures in event of bad receiver connection, defaults to failsafe values assigned in setup
-  failsafeGround(); // Prevents failures in event of being too close to the ground
-  failsafeHeight(); // Prevents failures in event of being too far away in Z-axis/Up
+  // failsafeGround(); // Prevents failures in event of being too close to the ground
+  // failsafeHeight(); // Prevents failures in event of being too far away in Z-axis/Up
   loopRate(2000); //Do not exceed 2000Hz, all filter parameters tuned to 2000Hz by default
 }

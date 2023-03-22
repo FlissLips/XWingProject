@@ -44,6 +44,7 @@ void radioSetup() {
   //SBUS Recevier 
   #elif defined USE_SBUS_RX
     sbus.Begin();
+    Serial.println("SBUS has begun..!");
 
   //DSM receiver
   #elif defined USE_DSM_RX
