@@ -582,6 +582,9 @@ void getMode()
   {
     mode = 0; // Default = Horizontal ??
   }
+
+ 
+
 }
 
 void getKillSwitch()

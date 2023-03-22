@@ -401,7 +401,10 @@ void loop() {  // servo1.write(0); //Command servo angle from 0-180 degrees (100
   getDesState(); //Convert raw commands to normalized values based on saturated control limits
 
   // Compute desired mode
-  // getMode();
+  getMode();
+
+  // Compute Kill Switch
+  getKillSwitch();
   //PID Controller - SELECT ONE:
   controlANGLE(); //Stabilize on angle setpoint
   // controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
