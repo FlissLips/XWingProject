@@ -504,6 +504,16 @@ void Madgwick6DOF(float gx, float gy, float gz, float ax, float ay, float az, fl
   yaw_IMU = -atan2(q1 * q2 + q0 * q3, 0.5f - q2 * q2 - q3 * q3) * 57.29577951; // degrees
 }
 
+void getYawPitchRoll()
+{
+  // DESCRIPTION: Gets Yaw, Pitch and Roll from BNO005
+  
+  roll_IMU = GyroX;
+  pitch_IMU = GyroY;
+  yaw_IMU = GyroZ;
+  
+}
+
 void kalmanFilter()
 {
   // DESCRIPTION: filters IMU, distance sensor and barometer to get fused altitude data
@@ -658,8 +668,8 @@ void controlANGLE2()
    *
    * NEEDS VALUES FROM VIKI
    */
-  if (mode == 0) // Horizontal
-  {
+  // if (mode == 0) // Horizontal
+  // {
     Kp_roll_rate = 5.0;
     Ki_roll_rate = 1.0;
     Kd_roll_rate = 0.0;
@@ -679,43 +689,43 @@ void controlANGLE2()
     Kp_yaw = 0.09;  
     Ki_yaw = 0.0005; 
     Kd_yaw = 0.00025;
-  }
-  if (mode == 1) // Vertical
-  {
-    Kp_roll_rate = 0.0;
-    Ki_roll_rate = 0.0;
-    Kd_roll_rate = 0.0;
-    Kp_pitch_rate = 0.0;
-    Ki_pitch_rate = 0.0;
-    Kd_pitch_rate = 0.0;
+  // }
+  // if (mode == 1) // Vertical
+  // {
+  //   Kp_roll_rate = 0.0;
+  //   Ki_roll_rate = 0.0;
+  //   Kd_roll_rate = 0.0;
+  //   Kp_pitch_rate = 0.0;
+  //   Ki_pitch_rate = 0.0;
+  //   Kd_pitch_rate = 0.0;
 
-    Kp_roll_angle = 0.2;
-    Ki_roll_angle = 0.2;
-    Kd_roll_angle = 0.2;
-    B_loop_roll = 0.2;
-    Kp_pitch_angle = 0.2;
-    Ki_pitch_angle = 0.2;
-    Kd_pitch_angle = 0.2;
-    B_loop_pitch = 0.2;
-  }
-  if (mode == 2) // Spinning
-  {
-    Kp_roll_rate = 0.0;
-    Ki_roll_rate = 0.0;
-    Kd_roll_rate = 0.0;
-    Kp_pitch_rate = 0.0;
-    Ki_pitch_rate = 0.0;
-    Kd_pitch_rate = 0.0;
+  //   Kp_roll_angle = 0.2;
+  //   Ki_roll_angle = 0.2;
+  //   Kd_roll_angle = 0.2;
+  //   B_loop_roll = 0.2;
+  //   Kp_pitch_angle = 0.2;
+  //   Ki_pitch_angle = 0.2;
+  //   Kd_pitch_angle = 0.2;
+  //   B_loop_pitch = 0.2;
+  // }
+  // if (mode == 2) // Spinning
+  // {
+  //   Kp_roll_rate = 0.0;
+  //   Ki_roll_rate = 0.0;
+  //   Kd_roll_rate = 0.0;
+  //   Kp_pitch_rate = 0.0;
+  //   Ki_pitch_rate = 0.0;
+  //   Kd_pitch_rate = 0.0;
 
-    Kp_roll_angle = 0.4;
-    Ki_roll_angle = 0.4;
-    Kd_roll_angle = 0.4;
-    B_loop_roll = 0.4;
-    Kp_pitch_angle = 0.4;
-    Ki_pitch_angle = 0.4;
-    Kd_pitch_angle = 0.4;
-    B_loop_pitch = 0.4;
-  }
+  //   Kp_roll_angle = 0.4;
+  //   Ki_roll_angle = 0.4;
+  //   Kd_roll_angle = 0.4;
+  //   B_loop_roll = 0.4;
+  //   Kp_pitch_angle = 0.4;
+  //   Ki_pitch_angle = 0.4;
+  //   Kd_pitch_angle = 0.4;
+  //   B_loop_pitch = 0.4;
+  // }
   // Outer loop - PID on angle
   float roll_des_ol, pitch_des_ol;
   // Roll

@@ -383,8 +383,8 @@ void loop() {  // servo1.write(0); //Command servo angle from 0-180 degrees (100
   // printGyroData();      //Prints filtered gyro data direct from IMU (expected: ~ -250 to 250, 0 at rest)
   // printAccelData();     //Prints filtered accelerometer data direct from IMU (expected: ~ -2 to 2; x,y 0 when level, z 1 when level)
   // printMagData();       //Prints filtered magnetometer data direct from IMU (expected: ~ -300 to 300)
-  //printRollPitchYaw();  //Prints roll, pitch, and yaw angles in degrees from Madgwick filter (expected: degrees, 0 when level)
-  //printPIDoutput();     //Prints computed stabilized PID variables from controller and desired setpoint (expected: ~ -1 to 1)
+  // printRollPitchYaw();  //Prints roll, pitch, and yaw angles in degrees from Madgwick filter (expected: degrees, 0 when level)
+  printPIDoutput();     //Prints computed stabilized PID variables from controller and desired setpoint (expected: ~ -1 to 1)
   //printMotorCommands(); //Prints the values being written to the motors (expected: 120 to 250)
   //printServoCommands(); //Prints the values being written to the servos (expected: 0 to 180)
   //printLoopRate();      //Prints the time between loops in microseconds (expected: microseconds between loop iterations)
@@ -395,20 +395,21 @@ void loop() {  // servo1.write(0); //Command servo angle from 0-180 degrees (100
   getUltrasonicData(); // Pulls raw distance data from ultrasonic sensor
   
   // Sensor fusion for attitude and altitude estimation
-  Madgwick(GyroX, -GyroY, -GyroZ, -AccX, AccY, AccZ, MagY, -MagX, MagZ, dt); //Updates roll_IMU, pitch_IMU, and yaw_IMU angle estimates (degrees)
-  // kalmanFilter();
-
+  // Madgwick(GyroX, -GyroY, -GyroZ, -AccX, AccY, AccZ, MagY, -MagX, MagZ, dt); //Updates roll_IMU, pitch_IMU, and yaw_IMU angle estimates (degrees)
+  kalmanFilter();
+  getYawPitchRoll();
   //Compute desired state
   getDesState(); //Convert raw commands to normalized values based on saturated control limits
 
   // Compute desired mode
-  getMode();
+  // getMode();
+  mode = 0;
 
   // Compute Kill Switch
   getKillSwitch();
   //PID Controller - SELECT ONE:
-  controlANGLE(); //Stabilize on angle setpoint
-  // controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
+  // controlANGLE(); //Stabilize on angle setpoint
+  controlANGLE2(); //Stabilize on angle setpoint using cascaded method. Rate controller must be tuned well first!
   //controlRATE(); //Stabilize on rate setpoint
 
   //Actuator mixing and scaling to PWM values
