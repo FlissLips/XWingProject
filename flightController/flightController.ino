@@ -175,6 +175,7 @@ float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high,
 
 float length = 0.5;           // length from servoes to the centre of motors (mS)
 
+
 // Altitude parameters for failsafes
 float maxAlt = 100.0;
 float minAlt = 0.2;

@@ -534,11 +534,11 @@ void getDesState()
    */
 
   // Needs to changed the range, as the range of our values are betweeen 171 and 1811
-      
-  thro_des = ((channel_1_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_THROTTLE) + MIN_VALUE_THROTTLE;    // Between 0 and 1
-  roll_des = ((channel_2_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;  // Between -1 and 1
-  pitch_des = ((channel_3_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE; // Between -1 and 1
-  yaw_des = ((channel_4_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;   // Between -1 and 1
+
+  thro_des = ((channel_1_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_THROTTLE) + MIN_VALUE_THROTTLE; // Between 0 and 1
+  roll_des = ((channel_2_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;       // Between -1 and 1
+  pitch_des = ((channel_3_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;      // Between -1 and 1
+  yaw_des = ((channel_4_pwm - MIN_VALUE_SBUS) / (MAX_VALUE_SBUS - MIN_VALUE_SBUS)) * (MAX_VALUE_PWM - MIN_VALUE_ANGLE) + MIN_VALUE_ANGLE;        // Between -1 and 1
 
   roll_passthru = roll_des / 2.0;   // Between -0.5 and 0.5
   pitch_passthru = pitch_des / 2.0; // Between -0.5 and 0.5
@@ -582,9 +582,6 @@ void getMode()
   {
     mode = 0; // Default = Horizontal ??
   }
-
- 
-
 }
 
 void getKillSwitch()
@@ -663,21 +660,25 @@ void controlANGLE2()
    */
   if (mode == 0) // Horizontal
   {
-    Kp_roll_rate = 0.0;
-    Ki_roll_rate = 0.0;
+    Kp_roll_rate = 5.0;
+    Ki_roll_rate = 1.0;
     Kd_roll_rate = 0.0;
-    Kp_pitch_rate = 0.0;
-    Ki_pitch_rate = 0.0;
-    Kd_pitch_rate = 0.0;
+    Kp_pitch_rate = 10.0;
+    Ki_pitch_rate = 0.5;
+    Kd_pitch_rate = 0.5;
 
-    Kp_roll_angle = 0.0;
-    Ki_roll_angle = 0.0;
-    Kd_roll_angle = 0.0;
-    B_loop_roll = 0.0;
-    Kp_pitch_angle = 0.0;
-    Ki_pitch_angle = 0.0;
+    Kp_roll_angle = 50.0;
+    Ki_roll_angle = 10.0;
+    Kd_roll_angle = 5.0;
+    B_loop_roll = 0.9;
+    Kp_pitch_angle = 8.0;
+    Ki_pitch_angle = 5.0;
     Kd_pitch_angle = 0.0;
-    B_loop_pitch = 0.0;
+    B_loop_pitch = 0.9;
+
+    Kp_yaw = 0.09;  
+    Ki_yaw = 0.0005; 
+    Kd_yaw = 0.00025;
   }
   if (mode == 1) // Vertical
   {
