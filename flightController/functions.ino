@@ -34,11 +34,11 @@ void controlMixer()
   m4_command_scaled = -thro_des / 4 - roll_PID / 2;  // Left motor
 
   // 0.5 is centered servo, 0.0 is zero throttle if connecting to ESC for conventional PWM, 1.0 is max throttle
-  float servo_calculation = yaw_PID / (length * thro_des);
-  s1_command_scaled = asin(servo_calculation);
-  s2_command_scaled = asin(servo_calculation);
-  s3_command_scaled = asin(servo_calculation);
-  s4_command_scaled = asin(servo_calculation);
+//   float servo_calculation = yaw_PID / (length * thro_des);
+//   s1_command_scaled = asin(servo_calculation);
+//   s2_command_scaled = asin(servo_calculation);
+//   s3_command_scaled = asin(servo_calculation);
+//   s4_command_scaled = asin(servo_calculation);
 }
 
 void IMUinit()
